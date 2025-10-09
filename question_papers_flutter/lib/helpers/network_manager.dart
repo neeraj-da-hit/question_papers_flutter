@@ -41,7 +41,7 @@ class NetworkManager extends GetxService {
     Map<String, String>? headers,
     Map<String, dynamic>? query,
   }) async {
-    final uri = Uri.parse('$baseUrl/$endpoint').replace(queryParameters: query);
+    final uri = Uri.parse('$baseUrl/$endpoint');//.replace(queryParameters: query)
 
     _logRequest(
       method: "GET",
