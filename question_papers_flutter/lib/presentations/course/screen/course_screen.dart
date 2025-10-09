@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:question_papers_flutter/common/app_theme.dart';
+import 'package:question_papers_flutter/helpers/navigation_helper.dart';
 import 'package:question_papers_flutter/presentations/course/controller/course_controller.dart';
 import 'package:question_papers_flutter/presentations/course/widgets/course_tile.dart';
+import 'package:question_papers_flutter/presentations/year/screen/year_screen.dart';
 
 class CourseScreen extends StatelessWidget {
   const CourseScreen({super.key});
@@ -9,6 +12,7 @@ class CourseScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final CourseController controller = Get.find<CourseController>();
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     // Load courses when the screen first opens
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -16,40 +20,57 @@ class CourseScreen extends StatelessWidget {
     });
 
     return Scaffold(
-      backgroundColor: Colors.grey[100],
+      backgroundColor: isDark
+          ? AppTheme.backgroundDark
+          : AppTheme.backgroundLight,
       appBar: AppBar(
-        title: const Text(
+        automaticallyImplyLeading: false,
+        title: Text(
           "Courses",
-          style: TextStyle(fontWeight: FontWeight.bold),
+          style: Theme.of(context).textTheme.titleLarge?.copyWith(
+            fontWeight: FontWeight.bold,
+            color: isDark ? AppTheme.textColorDark : AppTheme.textColorLight,
+          ),
         ),
         centerTitle: true,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
+          icon: Icon(
+            Icons.arrow_back,
+            color: isDark ? AppTheme.textColorDark : AppTheme.textColorLight,
+          ),
           onPressed: () => Get.back(),
         ),
         elevation: 0,
       ),
       body: Obx(() {
         if (controller.isLoading.value && controller.courses.isEmpty) {
-          return const Center(child: CircularProgressIndicator());
+          return Center(
+            child: CircularProgressIndicator(
+              color: Theme.of(context).colorScheme.primary,
+            ),
+          );
         }
 
         return RefreshIndicator(
           onRefresh: () async {
             await controller.loadCourses();
           },
-          color: Theme.of(context).primaryColor,
+          color: Theme.of(context).colorScheme.primary,
           child: Padding(
             padding: const EdgeInsets.symmetric(vertical: 12.0),
             child: controller.courses.isEmpty
                 ? ListView(
-                    // Needed so RefreshIndicator can work even when list is empty
-                    children: const [
-                      SizedBox(height: 200),
+                    children: [
+                      const SizedBox(height: 200),
                       Center(
                         child: Text(
                           "No courses available",
-                          style: TextStyle(fontSize: 16),
+                          style: TextStyle(
+                            fontSize: 16,
+                            color: isDark
+                                ? AppTheme.greyText
+                                : AppTheme.textColorLight,
+                          ),
                         ),
                       ),
                     ],
@@ -64,12 +85,28 @@ class CourseScreen extends StatelessWidget {
                       return CourseTile(
                         course: course,
                         onTap: () {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text("Selected: ${course.name}"),
-                              behavior: SnackBarBehavior.floating,
+                          NavigationHelper.push(
+                            YearScreen(
+                              courseId: course.id,
+                              courseName: course.name,
                             ),
                           );
+                          // ScaffoldMessenger.of(context).showSnackBar(
+                          //   SnackBar(
+                          //     backgroundColor: Theme.of(
+                          //       context,
+                          //     ).colorScheme.surface,
+                          //     content: Text(
+                          //       "Selected: ${course.name}",
+                          //       style: TextStyle(
+                          //         color: Theme.of(
+                          //           context,
+                          //         ).colorScheme.onSurface,
+                          //       ),
+                          //     ),
+                          //     behavior: SnackBarBehavior.floating,
+                          //   ),
+                          // );
                         },
                       );
                     },

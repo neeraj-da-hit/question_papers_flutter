@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:question_papers_flutter/presentations/course/model/course_model.dart';
+import 'package:question_papers_flutter/presentations/year/model/semester_model.dart';
 import 'package:question_papers_flutter/common/app_theme.dart';
 
-class CourseTile extends StatelessWidget {
-  final CourseModel course;
+class SemesterTile extends StatelessWidget {
+  final SemesterModel semester;
   final VoidCallback? onTap;
 
-  const CourseTile({super.key, required this.course, this.onTap});
+  const SemesterTile({super.key, required this.semester, this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -23,8 +23,18 @@ class CourseTile extends StatelessWidget {
       child: ListTile(
         contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
 
+        // leading: CircleAvatar(
+        //   backgroundColor: Theme.of(context).colorScheme.primary,
+        //   child: Text(
+        //     semester.name.split(' ').last, // e.g., "1" from "Semester 1"
+        //     style: const TextStyle(
+        //       color: Colors.white,
+        //       fontWeight: FontWeight.bold,
+        //     ),
+        //   ),
+        // ),
         title: Text(
-          course.name,
+          semester.name,
           style: TextStyle(
             fontSize: 17,
             fontWeight: FontWeight.w600,
@@ -32,6 +42,15 @@ class CourseTile extends StatelessWidget {
           ),
         ),
 
+        // subtitle: Text(
+        //   "Course ID: ${semester.course}",
+        //   style: TextStyle(
+        //     fontSize: 13,
+        //     color: isDark
+        //         ? AppTheme.greyText.withOpacity(0.7)
+        //         : AppTheme.greyText,
+        //   ),
+        // ),
         trailing: Icon(
           Icons.arrow_forward_ios,
           size: 18,
