@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:question_papers_flutter/common/app_theme.dart';
 import 'package:question_papers_flutter/common/shimmer_list.dart';
 import 'package:question_papers_flutter/helpers/navigation_helper.dart';
+import 'package:question_papers_flutter/presentations/paper/screen/paper_screen.dart';
 import 'package:question_papers_flutter/presentations/subject/controller/subject_controller.dart';
 import 'package:question_papers_flutter/presentations/subject/model/subject_model.dart';
 import 'package:question_papers_flutter/presentations/subject/widgets/SubjectTile.dart';
@@ -127,7 +128,7 @@ class _SubjectScreenState extends State<SubjectScreen> {
                                 subject: subject,
                                 onTap: () {
                                   NavigationHelper.push(
-                                    SubjectScreen(
+                                    PaperScreen(
                                       subjectId: subject.id,
                                       subjectName: subject.name,
                                     ),

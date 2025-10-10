@@ -11,6 +11,7 @@ class AppConstants {
   static const String allCourse = "api/course";
   static const String yearSem = "api/semester";
   static const String subject = "api/subject";
+  static const String paper = "api/paper";
   static const String coursesEndpoint = "courses";
   static const String uploadPdfEndpoint = "upload/pdf";
 
