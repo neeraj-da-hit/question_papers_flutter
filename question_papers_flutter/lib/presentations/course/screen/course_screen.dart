@@ -1,23 +1,51 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:question_papers_flutter/common/app_theme.dart';
+import 'package:question_papers_flutter/common/shimmer_list.dart';
 import 'package:question_papers_flutter/helpers/navigation_helper.dart';
 import 'package:question_papers_flutter/presentations/course/controller/course_controller.dart';
 import 'package:question_papers_flutter/presentations/course/widgets/course_tile.dart';
 import 'package:question_papers_flutter/presentations/year/screen/year_screen.dart';
 
-class CourseScreen extends StatelessWidget {
+class CourseScreen extends StatefulWidget {
   const CourseScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    final CourseController controller = Get.find<CourseController>();
-    final isDark = Theme.of(context).brightness == Brightness.dark;
+  State<CourseScreen> createState() => _CourseScreenState();
+}
 
-    // Load courses when the screen first opens
+class _CourseScreenState extends State<CourseScreen> {
+  final CourseController controller = Get.find<CourseController>();
+  bool showShimmer = false;
+
+  @override
+  void initState() {
+    super.initState();
+    // Load data when screen opens
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      controller.loadCourses();
+      _loadWithAnimation();
     });
+  }
+
+  /// Loads courses and ensures shimmer shows for at least 1 second
+  Future<void> _loadWithAnimation() async {
+    setState(() => showShimmer = true);
+    final start = DateTime.now();
+
+    await controller.loadCourses();
+
+    // ensure shimmer stays visible at least 1 second
+    final diff = DateTime.now().difference(start);
+    final delay = diff.inMilliseconds < 1000 ? 1000 - diff.inMilliseconds : 0;
+    await Future.delayed(Duration(milliseconds: delay));
+
+    if (mounted) setState(() => showShimmer = false);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
       backgroundColor: isDark
@@ -33,83 +61,69 @@ class CourseScreen extends StatelessWidget {
           ),
         ),
         centerTitle: true,
-        leading: IconButton(
-          icon: Icon(
-            Icons.arrow_back,
-            color: isDark ? AppTheme.textColorDark : AppTheme.textColorLight,
-          ),
-          onPressed: () => Get.back(),
-        ),
         elevation: 0,
       ),
       body: Obx(() {
-        if (controller.isLoading.value && controller.courses.isEmpty) {
-          return Center(
-            child: CircularProgressIndicator(
-              color: Theme.of(context).colorScheme.primary,
-            ),
-          );
-        }
+        final courses = controller.courses;
 
         return RefreshIndicator(
-          onRefresh: () async {
-            await controller.loadCourses();
-          },
+          onRefresh: _loadWithAnimation,
           color: Theme.of(context).colorScheme.primary,
-          child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 12.0),
-            child: controller.courses.isEmpty
-                ? ListView(
-                    children: [
-                      const SizedBox(height: 200),
-                      Center(
-                        child: Text(
-                          "No courses available",
-                          style: TextStyle(
-                            fontSize: 16,
-                            color: isDark
-                                ? AppTheme.greyText
-                                : AppTheme.textColorLight,
-                          ),
-                        ),
-                      ),
-                    ],
-                  )
-                : ListView.separated(
+          child: AnimatedSwitcher(
+            duration: const Duration(milliseconds: 400),
+            switchInCurve: Curves.easeInOut,
+            switchOutCurve: Curves.easeInOut,
+            child: showShimmer
+                ? ListView.separated(
+                    key: const ValueKey('shimmer'),
                     physics: const AlwaysScrollableScrollPhysics(),
-                    padding: const EdgeInsets.only(bottom: 32),
-                    itemCount: controller.courses.length,
+                    padding: const EdgeInsets.only(top: 16, bottom: 32),
+                    itemCount: 10,
                     separatorBuilder: (_, __) => const SizedBox(height: 10),
-                    itemBuilder: (context, index) {
-                      final course = controller.courses[index];
-                      return CourseTile(
-                        course: course,
-                        onTap: () {
-                          NavigationHelper.push(
-                            YearScreen(
-                              courseId: course.id,
-                              courseName: course.name,
-                            ),
-                          );
-                          // ScaffoldMessenger.of(context).showSnackBar(
-                          //   SnackBar(
-                          //     backgroundColor: Theme.of(
-                          //       context,
-                          //     ).colorScheme.surface,
-                          //     content: Text(
-                          //       "Selected: ${course.name}",
-                          //       style: TextStyle(
-                          //         color: Theme.of(
-                          //           context,
-                          //         ).colorScheme.onSurface,
-                          //       ),
-                          //     ),
-                          //     behavior: SnackBarBehavior.floating,
-                          //   ),
-                          // );
-                        },
-                      );
-                    },
+                    itemBuilder: (_, __) => const ShimmerList(),
+                  )
+                : Padding(
+                    key: const ValueKey('list'),
+                    padding: const EdgeInsets.symmetric(vertical: 12.0),
+                    child: courses.isEmpty
+                        ? ListView(
+                            physics: const AlwaysScrollableScrollPhysics(),
+                            children: [
+                              const SizedBox(height: 200),
+                              Center(
+                                child: Text(
+                                  "No courses available",
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    color: isDark
+                                        ? AppTheme.greyText
+                                        : AppTheme.textColorLight,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          )
+                        : ListView.separated(
+                            physics: const AlwaysScrollableScrollPhysics(),
+                            padding: const EdgeInsets.only(bottom: 32),
+                            itemCount: courses.length,
+                            separatorBuilder: (_, __) =>
+                                const SizedBox(height: 10),
+                            itemBuilder: (context, index) {
+                              final course = courses[index];
+                              return CourseTile(
+                                course: course,
+                                onTap: () {
+                                  NavigationHelper.push(
+                                    YearScreen(
+                                      courseId: course.id,
+                                      courseName: course.name,
+                                    ),
+                                  );
+                                },
+                              );
+                            },
+                          ),
                   ),
           ),
         );

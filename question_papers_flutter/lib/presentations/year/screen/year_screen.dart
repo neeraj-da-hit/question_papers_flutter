@@ -1,13 +1,18 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:question_papers_flutter/common/app_theme.dart';
+import 'package:question_papers_flutter/common/shimmer_list.dart';
+import 'package:question_papers_flutter/helpers/navigation_helper.dart';
+import 'package:question_papers_flutter/presentations/subject/screen/subject_screen.dart';
 import 'package:question_papers_flutter/presentations/year/controller/year_controller.dart';
 import 'package:question_papers_flutter/presentations/year/model/semester_model.dart';
 import 'package:question_papers_flutter/presentations/year/widgets/semester_tile.dart';
 
-class YearScreen extends StatelessWidget {
+class YearScreen extends StatefulWidget {
   final String courseId; // required to load semesters for a specific course
   final String courseName;
+
   const YearScreen({
     super.key,
     required this.courseId,
@@ -15,14 +20,39 @@ class YearScreen extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
-    final YearController controller = Get.put(YearController());
-    final isDark = Theme.of(context).brightness == Brightness.dark;
+  State<YearScreen> createState() => _YearScreenState();
+}
 
-    // Load semesters when the screen first opens
+class _YearScreenState extends State<YearScreen> {
+  final YearController controller = Get.find<YearController>();
+  bool showShimmer = false;
+
+  @override
+  void initState() {
+    super.initState();
+    // Load semesters when screen opens
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      controller.loadSemesters(courseId);
+      _loadWithAnimation();
     });
+  }
+
+  /// Ensures shimmer shows for at least 1 second (even if API returns quickly)
+  Future<void> _loadWithAnimation() async {
+    setState(() => showShimmer = true);
+    final start = DateTime.now();
+
+    await controller.loadSemesters(widget.courseId);
+
+    final diff = DateTime.now().difference(start);
+    final delay = diff.inMilliseconds < 1000 ? 1000 - diff.inMilliseconds : 0;
+    await Future.delayed(Duration(milliseconds: delay));
+
+    if (mounted) setState(() => showShimmer = false);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
       backgroundColor: isDark
@@ -30,7 +60,7 @@ class YearScreen extends StatelessWidget {
           : AppTheme.backgroundLight,
       appBar: AppBar(
         title: Text(
-          courseName,
+          widget.courseName,
           style: Theme.of(context).textTheme.titleLarge?.copyWith(
             fontWeight: FontWeight.bold,
             color: isDark ? AppTheme.textColorDark : AppTheme.textColorLight,
@@ -47,59 +77,67 @@ class YearScreen extends StatelessWidget {
         elevation: 0,
       ),
       body: Obx(() {
-        if (controller.isLoading.value && controller.semesters.isEmpty) {
-          return Center(
-            child: CircularProgressIndicator(
-              color: Theme.of(context).colorScheme.primary,
-            ),
-          );
-        }
+        final semesters = controller.semesters;
 
         return RefreshIndicator(
-          onRefresh: () async {
-            await controller.loadSemesters(courseId);
-          },
+          onRefresh: _loadWithAnimation,
           color: Theme.of(context).colorScheme.primary,
-          child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 12.0),
-            child: controller.semesters.isEmpty
-                ? ListView(
-                    children: [
-                      const SizedBox(height: 200),
-                      Center(
-                        child: Text(
-                          "No semesters available",
-                          style: TextStyle(
-                            fontSize: 16,
-                            color: isDark
-                                ? AppTheme.greyText
-                                : AppTheme.textColorLight,
-                          ),
-                        ),
-                      ),
-                    ],
-                  )
-                : ListView.separated(
+          child: AnimatedSwitcher(
+            duration: const Duration(milliseconds: 400),
+            switchInCurve: Curves.easeInOut,
+            switchOutCurve: Curves.easeInOut,
+            child: showShimmer
+                ? ListView.separated(
+                    key: const ValueKey('shimmer'),
                     physics: const AlwaysScrollableScrollPhysics(),
-                    padding: const EdgeInsets.only(bottom: 32),
-                    itemCount: controller.semesters.length,
+                    padding: const EdgeInsets.only(top: 16, bottom: 32),
+                    itemCount: 10,
                     separatorBuilder: (_, __) => const SizedBox(height: 10),
-                    itemBuilder: (context, index) {
-                      final SemesterModel semester =
-                          controller.semesters[index];
+                    itemBuilder: (_, __) => const ShimmerList(),
+                  )
+                : Padding(
+                    key: const ValueKey('list'),
+                    padding: const EdgeInsets.symmetric(vertical: 12.0),
+                    child: semesters.isEmpty
+                        ? ListView(
+                            physics: const AlwaysScrollableScrollPhysics(),
+                            children: [
+                              const SizedBox(height: 200),
+                              Center(
+                                child: Text(
+                                  "No semesters available",
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    color: isDark
+                                        ? AppTheme.greyText
+                                        : AppTheme.textColorLight,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          )
+                        : ListView.separated(
+                            physics: const AlwaysScrollableScrollPhysics(),
+                            padding: const EdgeInsets.only(bottom: 32),
+                            itemCount: semesters.length,
+                            separatorBuilder: (_, __) =>
+                                const SizedBox(height: 10),
+                            itemBuilder: (context, index) {
+                              final SemesterModel semester = semesters[index];
 
-                      return SemesterTile(
-                        semester: semester,
-                        onTap: () {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text("Selected: ${semester.name}"),
-                              behavior: SnackBarBehavior.floating,
-                            ),
-                          );
-                        },
-                      );
-                    },
+                              return SemesterTile(
+                                semester: semester,
+                                onTap: () {
+                                  NavigationHelper.push(
+                                    SubjectScreen(
+                                      subjectId: semester.id,
+                                      subjectName: semester.name,
+                                    ),
+                                  );
+                                },
+                              );
+                            },
+                          ),
                   ),
           ),
         );
