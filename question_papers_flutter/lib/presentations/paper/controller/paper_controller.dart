@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:open_file/open_file.dart';
 import 'package:question_papers_flutter/presentations/paper/model/paper_model.dart';
 import 'package:question_papers_flutter/presentations/paper/service/paper_service.dart';
+import 'package:question_papers_flutter/presentations/subject/screen/pdf_view_screen.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class PaperController extends GetxController {
@@ -31,9 +32,12 @@ class PaperController extends GetxController {
   }
 
   /// Open a PDF file (question paper or master paper)
-  Future<void> openPdf(String url) async {
+  Future<void> openPdf(String url, {String title = "PDF Viewer"}) async {
     try {
-      await OpenFile.open(url);
+      if (!url.startsWith('http')) {
+        throw "Invalid PDF URL";
+      }
+      Get.to(() => PdfViewerScreen(url: url, title: title));
     } catch (e) {
       Get.snackbar("Error", "Cannot open PDF: $e");
     }

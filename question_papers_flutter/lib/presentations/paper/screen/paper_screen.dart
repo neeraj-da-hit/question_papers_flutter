@@ -44,7 +44,6 @@ class _PaperScreenState extends State<PaperScreen> {
     if (mounted) setState(() => showShimmer = false);
   }
 
-  // Function to get YouTube thumbnail
   String getYoutubeThumbnail(String url) {
     Uri uri = Uri.parse(url);
     if (uri.host.contains('youtu.be')) {
@@ -112,70 +111,31 @@ class _PaperScreenState extends State<PaperScreen> {
                     padding: const EdgeInsets.only(bottom: 32, top: 16),
                     children: [
                       if (questionPapers.isNotEmpty) ...[
-                        Padding(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 20,
-                            vertical: 8,
-                          ),
-                          child: Text(
-                            "Question Papers",
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                              color: isDark
-                                  ? AppTheme.textColorDark
-                                  : AppTheme.textColorLight,
-                            ),
-                          ),
-                        ),
+                        _buildSectionTitle(context, "Question Papers", isDark),
                         ...questionPapers.map(
                           (p) => PaperTile(
                             title: "Question Paper (${p.year})",
-                            onTap: () => controller.openPdf(p.pdfUrl),
+                            onTap: () => controller.openPdf(
+                              p.pdfUrl,
+                              title: "Question Paper (${p.year})",
+                            ),
                           ),
                         ),
                       ],
                       if (masterPapers.isNotEmpty) ...[
-                        Padding(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 20,
-                            vertical: 8,
-                          ),
-                          child: Text(
-                            "Master Papers",
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                              color: isDark
-                                  ? AppTheme.textColorDark
-                                  : AppTheme.textColorLight,
-                            ),
-                          ),
-                        ),
+                        _buildSectionTitle(context, "Master Papers", isDark),
                         ...masterPapers.map(
                           (p) => PaperTile(
                             title: "Master Paper (${p.year})",
-                            onTap: () => controller.openPdf(p.masterPdfUrl!),
+                            onTap: () => controller.openPdf(
+                              p.masterPdfUrl!,
+                              title: "Master Paper (${p.year})",
+                            ),
                           ),
                         ),
                       ],
                       if (videos.isNotEmpty) ...[
-                        Padding(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 20,
-                            vertical: 8,
-                          ),
-                          child: Text(
-                            "Videos",
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                              color: isDark
-                                  ? AppTheme.textColorDark
-                                  : AppTheme.textColorLight,
-                            ),
-                          ),
-                        ),
+                        _buildSectionTitle(context, "Videos", isDark),
                         ...videos.map(
                           (p) => Container(
                             margin: const EdgeInsets.symmetric(
@@ -212,6 +172,20 @@ class _PaperScreenState extends State<PaperScreen> {
           ),
         );
       }),
+    );
+  }
+
+  Widget _buildSectionTitle(BuildContext context, String title, bool isDark) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+      child: Text(
+        title,
+        style: TextStyle(
+          fontSize: 16,
+          fontWeight: FontWeight.bold,
+          color: isDark ? AppTheme.textColorDark : AppTheme.textColorLight,
+        ),
+      ),
     );
   }
 }
