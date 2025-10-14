@@ -1,12 +1,12 @@
 import 'package:get/get.dart';
-import 'package:question_papers_flutter/presentations/course/controller/course_controller.dart';
-import 'package:question_papers_flutter/presentations/course/service/course_service.dart';
-import 'package:question_papers_flutter/presentations/paper/controller/paper_controller.dart';
-import 'package:question_papers_flutter/presentations/paper/service/paper_service.dart';
-import 'package:question_papers_flutter/presentations/subject/controller/subject_controller.dart';
-import 'package:question_papers_flutter/presentations/subject/service/subject_service.dart';
-import 'package:question_papers_flutter/presentations/year/controller/year_controller.dart';
-import 'package:question_papers_flutter/presentations/year/service/year_service.dart';
+import 'package:question_papers_flutter/presentations/main/course/controller/course_controller.dart';
+import 'package:question_papers_flutter/presentations/main/course/service/course_service.dart';
+import 'package:question_papers_flutter/presentations/main/paper/controller/paper_controller.dart';
+import 'package:question_papers_flutter/presentations/main/paper/service/paper_service.dart';
+import 'package:question_papers_flutter/presentations/main/subject/controller/subject_controller.dart';
+import 'package:question_papers_flutter/presentations/main/subject/service/subject_service.dart';
+import 'package:question_papers_flutter/presentations/main/year/controller/year_controller.dart';
+import 'package:question_papers_flutter/presentations/main/year/service/year_service.dart';
 
 /// Initialize all dependencies for the app
 Future<void> initDependencies() async {
