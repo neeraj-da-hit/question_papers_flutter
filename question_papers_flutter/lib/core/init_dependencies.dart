@@ -1,4 +1,6 @@
 import 'package:get/get.dart';
+import 'package:question_papers_flutter/presentations/auth/login/controller/login_controller.dart';
+import 'package:question_papers_flutter/presentations/auth/login/service/login_service.dart';
 import 'package:question_papers_flutter/presentations/main/course/controller/course_controller.dart';
 import 'package:question_papers_flutter/presentations/main/course/service/course_service.dart';
 import 'package:question_papers_flutter/presentations/main/paper/controller/paper_controller.dart';
@@ -18,11 +20,13 @@ Future<void> initDependencies() async {
   Get.put<SubjectService>(SubjectService(), permanent: true);
   Get.put<PaperService>(PaperService(), permanent: true);
   Get.put<SplashService>(SplashService(), permanent: true);
+  Get.put<LoginService>(LoginService(), permanent: true);
   // Controllers
   Get.put<CourseController>(CourseController(), permanent: true);
   Get.put<YearController>(YearController(), permanent: true);
   Get.put<SubjectController>(SubjectController(), permanent: true);
   Get.put<PaperController>(PaperController(), permanent: true);
   Get.put<SplashController>(SplashController(), permanent: true);
+  Get.put<LoginController>(LoginController(), permanent: true);
   
 }
