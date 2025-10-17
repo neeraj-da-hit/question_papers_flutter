@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:question_papers_flutter/presentations/main/course/screen/course_screen.dart';
+import 'package:question_papers_flutter/presentations/main/profile/screen/profiel_screen.dart';
 
 class BottomNavBar extends StatefulWidget {
   const BottomNavBar({super.key});
@@ -14,7 +15,7 @@ class _BottomNavBarState extends State<BottomNavBar> {
   final List<Widget> _screens = const [
     CourseScreen(),
     CourseScreen(),
-    CourseScreen(),
+    ProfielScreen()
   ];
 
   void _onItemTapped(int index) {

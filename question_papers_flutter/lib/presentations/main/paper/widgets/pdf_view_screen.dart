@@ -17,7 +17,6 @@ class _PdfViewerScreenState extends State<PdfViewerScreen> {
   late PdfViewerController _pdfViewerController;
   double _zoomLevel = 1.0;
   int _rotation = 0;
-  bool _isWhiteBackground = false;
 
   @override
   void initState() {
@@ -32,9 +31,7 @@ class _PdfViewerScreenState extends State<PdfViewerScreen> {
         _pdfViewerController.zoomLevel = _zoomLevel;
       });
     } else {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(const SnackBar(content: Text('Maximum zoom reached')));
+      _showSnack('Maximum zoom reached');
     }
   }
 
@@ -45,9 +42,7 @@ class _PdfViewerScreenState extends State<PdfViewerScreen> {
         _pdfViewerController.zoomLevel = _zoomLevel;
       });
     } else {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(const SnackBar(content: Text('Minimum zoom reached')));
+      _showSnack('Minimum zoom reached');
     }
   }
 
@@ -64,56 +59,40 @@ class _PdfViewerScreenState extends State<PdfViewerScreen> {
     });
   }
 
-  void _toggleBackground() {
-    setState(() {
-      _isWhiteBackground = !_isWhiteBackground;
-    });
+  void _showSnack(String message) {
+    ScaffoldMessenger.of(context)
+        .showSnackBar(SnackBar(content: Text(message)));
   }
 
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final backgroundColor = _isWhiteBackground
-        ? Colors.white
-        : (isDark ? AppTheme.backgroundDark : AppTheme.backgroundLight);
+    final backgroundColor =
+        isDark ? AppTheme.backgroundDark : AppTheme.backgroundLight;
+    final textColor =
+        isDark ? AppTheme.textColorDark : AppTheme.textColorLight;
 
     return Scaffold(
       backgroundColor: backgroundColor,
       appBar: AppBar(
+        backgroundColor: backgroundColor,
+        elevation: 0,
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back, color: textColor),
+          onPressed: () => Navigator.pop(context),
+        ),
         title: Text(
           widget.title,
           style: Theme.of(context).textTheme.titleLarge?.copyWith(
-            fontWeight: FontWeight.bold,
-            color: isDark ? AppTheme.textColorDark : AppTheme.textColorLight,
-          ),
+                fontWeight: FontWeight.bold,
+                color: textColor,
+              ),
         ),
         centerTitle: true,
-        leading: IconButton(
-          icon: Icon(
-            Icons.arrow_back,
-            color: isDark ? AppTheme.textColorDark : AppTheme.textColorLight,
-          ),
-          onPressed: () => Navigator.pop(context),
-        ),
-        backgroundColor: Colors.transparent,
-        elevation: 0,
         actions: [
           IconButton(
-            tooltip: "Toggle Background",
-            icon: Icon(
-              _isWhiteBackground
-                  ? Icons.dark_mode_outlined
-                  : Icons.light_mode_outlined,
-              color: isDark ? AppTheme.textColorDark : AppTheme.textColorLight,
-            ),
-            onPressed: _toggleBackground,
-          ),
-          IconButton(
             tooltip: "Rotate",
-            icon: Icon(
-              Icons.rotate_right,
-              color: isDark ? AppTheme.textColorDark : AppTheme.textColorLight,
-            ),
+            icon: Icon(Icons.rotate_right, color: textColor),
             onPressed: _rotate,
           ),
         ],
@@ -130,37 +109,31 @@ class _PdfViewerScreenState extends State<PdfViewerScreen> {
                 canShowScrollStatus: true,
                 enableDoubleTapZooming: true,
                 onDocumentLoadFailed: (details) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text('Failed to load PDF: ${details.error}'),
-                    ),
-                  );
+                  _showSnack('Failed to load PDF: ${details.error}');
                 },
               ),
             ),
           ),
-          // Bottom Zoom Controls
           Positioned(
             bottom: 16,
             left: 0,
             right: 0,
             child: Center(
               child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
                 decoration: BoxDecoration(
-                  color: Colors.black.withOpacity(0.4),
-                  borderRadius: BorderRadius.circular(12),
+                  color: isDark
+                      ? Colors.white.withOpacity(0.1)
+                      : Colors.black.withOpacity(0.05),
+                  borderRadius: BorderRadius.circular(AppTheme.defaultRadius),
                 ),
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    _controlButton(Icons.zoom_out, "Zoom Out", _zoomOut),
-                    _controlButton(
-                      Icons.fit_screen,
-                      "Fit to Screen",
-                      _fitToScreen,
-                    ),
-                    _controlButton(Icons.zoom_in, "Zoom In", _zoomIn),
+                    _controlButton(Icons.zoom_out, "Zoom Out", _zoomOut, textColor),
+                    _controlButton(Icons.fit_screen, "Fit to Screen", _fitToScreen, textColor),
+                    _controlButton(Icons.zoom_in, "Zoom In", _zoomIn, textColor),
                   ],
                 ),
               ),
@@ -171,9 +144,10 @@ class _PdfViewerScreenState extends State<PdfViewerScreen> {
     );
   }
 
-  Widget _controlButton(IconData icon, String tooltip, VoidCallback onPressed) {
+  Widget _controlButton(
+      IconData icon, String tooltip, VoidCallback onPressed, Color color) {
     return IconButton(
-      icon: Icon(icon, color: Colors.white),
+      icon: Icon(icon, color: color),
       tooltip: tooltip,
       onPressed: onPressed,
     );

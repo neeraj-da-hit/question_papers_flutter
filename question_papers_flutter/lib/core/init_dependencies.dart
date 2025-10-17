@@ -7,6 +7,8 @@ import 'package:question_papers_flutter/presentations/main/subject/controller/su
 import 'package:question_papers_flutter/presentations/main/subject/service/subject_service.dart';
 import 'package:question_papers_flutter/presentations/main/year/controller/year_controller.dart';
 import 'package:question_papers_flutter/presentations/main/year/service/year_service.dart';
+import 'package:question_papers_flutter/presentations/splash/controller/splash_controller.dart';
+import 'package:question_papers_flutter/presentations/splash/service/splash_service.dart';
 
 /// Initialize all dependencies for the app
 Future<void> initDependencies() async {
@@ -15,10 +17,12 @@ Future<void> initDependencies() async {
   Get.put<YearService>(YearService(), permanent: true);
   Get.put<SubjectService>(SubjectService(), permanent: true);
   Get.put<PaperService>(PaperService(), permanent: true);
-
+  Get.put<SplashService>(SplashService(), permanent: true);
   // Controllers
   Get.put<CourseController>(CourseController(), permanent: true);
   Get.put<YearController>(YearController(), permanent: true);
   Get.put<SubjectController>(SubjectController(), permanent: true);
   Get.put<PaperController>(PaperController(), permanent: true);
+  Get.put<SplashController>(SplashController(), permanent: true);
+  
 }
