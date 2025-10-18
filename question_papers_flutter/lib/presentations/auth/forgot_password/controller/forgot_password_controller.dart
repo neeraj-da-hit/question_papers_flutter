@@ -24,7 +24,7 @@ class ForgotPasswordController extends GetxController {
       if (forgotResponse.value?.message ==
           "OTP sent to email for password reset") {
         Get.snackbar("Success", forgotResponse.value!.message);
-        Get.to(() => VerifyOtpScreen(email: email));
+        Get.to(() => VerifyOtpScreen(email: email, isFromForgotPassword: true));
       } else {
         Get.snackbar(
           "Failed",

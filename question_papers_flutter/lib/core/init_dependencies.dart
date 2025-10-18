@@ -1,8 +1,11 @@
 import 'package:get/get.dart';
+import 'package:question_papers_flutter/presentations/auth/forgot_password/controller/forgot_password_controller.dart';
+import 'package:question_papers_flutter/presentations/auth/forgot_password/service/forgot_password_service.dart';
 import 'package:question_papers_flutter/presentations/auth/login/controller/login_controller.dart';
 import 'package:question_papers_flutter/presentations/auth/login/service/login_service.dart';
 import 'package:question_papers_flutter/presentations/auth/signup/controller/sign_controller.dart';
 import 'package:question_papers_flutter/presentations/auth/signup/service/signup_service.dart';
+import 'package:question_papers_flutter/presentations/auth/verify_forgot_password_otp/controller/forgot_password_otp_controller.dart';
 import 'package:question_papers_flutter/presentations/auth/verify_otp/controller/verify_otp_controller.dart';
 import 'package:question_papers_flutter/presentations/auth/verify_otp/service/verify_otp_service.dart';
 import 'package:question_papers_flutter/presentations/main/course/controller/course_controller.dart';
@@ -27,7 +30,7 @@ Future<void> initDependencies() async {
   Get.put<LoginService>(LoginService(), permanent: true);
   Get.put<SignupService>(SignupService(), permanent: true);
   Get.put<VerifyOtpService>(VerifyOtpService(), permanent: true);
-  // Get.put<ForgotPasswordService>(ForgotPasswordService(), permanent: true);
+  Get.put<ForgotPasswordService>(ForgotPasswordService(), permanent: true);
 
   // Controllers
   Get.put<CourseController>(CourseController(), permanent: true);
@@ -38,5 +41,12 @@ Future<void> initDependencies() async {
   Get.put<LoginController>(LoginController(), permanent: true);
   Get.put<SignController>(SignController(), permanent: true);
   Get.put<VerifyOtpController>(VerifyOtpController(), permanent: true);
-  // Get.put<ForgotPasswordController>(ForgotPasswordController(), permanent: true);
+  Get.put<ForgotPasswordController>(
+    ForgotPasswordController(),
+    permanent: true,
+  );
+  Get.put<ForgotPasswordOtpController>(
+    ForgotPasswordOtpController(),
+    permanent: true,
+  );
 }

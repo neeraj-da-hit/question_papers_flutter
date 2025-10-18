@@ -37,7 +37,7 @@ class SignController extends GetxController {
       // ✅ Check API message or status and navigate
       if (responseMessage.value?.message == "OTP sent to email") {
         Get.snackbar("Success", responseMessage.value!.message);
-        Get.to(() => VerifyOtpScreen(email: email)); // 👈 pass email if needed
+        Get.to(() => VerifyOtpScreen(email: email));
       } else {
         Get.snackbar(
           "Signup Failed",
