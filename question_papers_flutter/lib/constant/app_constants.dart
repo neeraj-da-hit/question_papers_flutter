@@ -15,8 +15,10 @@ class AppConstants {
   static const String coursesEndpoint = "courses";
   static const String uploadPdfEndpoint = "upload/pdf";
 
-  //auth 
+  //auth
   static const String login = "api/auth/login";
+  static const String signup = "api/auth/register";
+  static const String veriyOtp = "api/auth/verify-otp";
 
   // =======================
   // App Strings

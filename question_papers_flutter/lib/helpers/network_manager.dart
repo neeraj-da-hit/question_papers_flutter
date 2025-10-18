@@ -41,7 +41,9 @@ class NetworkManager extends GetxService {
     Map<String, String>? headers,
     Map<String, dynamic>? query,
   }) async {
-    final uri = Uri.parse('$baseUrl/$endpoint');//.replace(queryParameters: query)
+    final uri = Uri.parse(
+      '$baseUrl/$endpoint',
+    ); //.replace(queryParameters: query)
 
     _logRequest(
       method: "GET",
@@ -195,24 +197,42 @@ class NetworkManager extends GetxService {
     }
 
     final statusCode = response.statusCode;
+    final responseBody = response.body.isNotEmpty
+        ? jsonDecode(response.body)
+        : null;
 
+    // ✅ Success responses (200–299)
     if (statusCode >= 200 && statusCode < 300) {
-      final body = response.body.isNotEmpty ? jsonDecode(response.body) : null;
-
-      if (body is Map<String, dynamic>) {
-        return body;
-      } else if (body is List) {
-        return {"data": body}; // unify array responses
+      if (responseBody is Map<String, dynamic>) {
+        return responseBody;
+      } else if (responseBody is List) {
+        return {"data": responseBody};
       } else {
-        return {"data": body};
+        return {"data": responseBody};
       }
-    } else {
+    }
+    // ❌ Handle error responses (400, 401, 500, etc.)
+    else {
+      String message = "Something went wrong";
+
+      try {
+        if (responseBody is Map && responseBody.containsKey("message")) {
+          message = responseBody["message"].toString();
+        } else if (responseBody is String && responseBody.isNotEmpty) {
+          message = responseBody;
+        } else {
+          message = "Request failed (${response.statusCode})";
+        }
+      } catch (_) {
+        message = "Request failed (${response.statusCode})";
+      }
+
       if (kDebugMode) {
-        print("❌ Error ${response.statusCode}: ${response.body}");
+        print("❌ Error ${response.statusCode}: $message");
       }
-      throw HttpException(
-        "Request failed: [${response.statusCode}] ${response.reasonPhrase}",
-      );
+
+      // 🧩 Throw a meaningful exception
+      throw Exception(message);
     }
   }
 

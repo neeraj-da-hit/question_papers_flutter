@@ -4,6 +4,7 @@ import 'package:question_papers_flutter/common/bottom_navbar.dart';
 import 'package:question_papers_flutter/common/widgets/app_button.dart';
 import 'package:question_papers_flutter/common/widgets/app_textfield.dart';
 import 'package:question_papers_flutter/helpers/navigation_helper.dart';
+import 'package:question_papers_flutter/presentations/auth/signup/screen/signup_screen.dart';
 import '../controller/login_controller.dart';
 import 'package:question_papers_flutter/common/app_theme.dart';
 
@@ -108,6 +109,7 @@ class LoginScreen extends StatelessWidget {
                   TextButton(
                     onPressed: () {
                       // navigation to sign up screen
+                      NavigationHelper.push(SignupScreen());
                     },
                     child: Text(
                       "Sign Up",
