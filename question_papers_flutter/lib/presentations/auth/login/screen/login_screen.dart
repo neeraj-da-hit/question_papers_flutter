@@ -4,6 +4,7 @@ import 'package:question_papers_flutter/common/bottom_navbar.dart';
 import 'package:question_papers_flutter/common/widgets/app_button.dart';
 import 'package:question_papers_flutter/common/widgets/app_textfield.dart';
 import 'package:question_papers_flutter/helpers/navigation_helper.dart';
+import 'package:question_papers_flutter/presentations/auth/forgot_password/screen/forgot_password_screen.dart';
 import 'package:question_papers_flutter/presentations/auth/signup/screen/signup_screen.dart';
 import '../controller/login_controller.dart';
 import 'package:question_papers_flutter/common/app_theme.dart';
@@ -88,7 +89,9 @@ class LoginScreen extends StatelessWidget {
               ),
               const SizedBox(height: 10),
               TextButton(
-                onPressed: () {},
+                onPressed: () {
+                  NavigationHelper.push(ForgotPasswordScreen());
+                },
                 child: Text(
                   "Forgot Password?",
                   style: TextStyle(color: AppTheme.primaryColor),

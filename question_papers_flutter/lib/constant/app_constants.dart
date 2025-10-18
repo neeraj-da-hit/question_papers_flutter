@@ -19,11 +19,13 @@ class AppConstants {
   static const String login = "api/auth/login";
   static const String signup = "api/auth/register";
   static const String veriyOtp = "api/auth/verify-otp";
+  static const String forgotPassword = "api/auth/forgot-password";
+  static const String verifyForgotOtp = "api/auth/verify-reset-otp";
 
   // =======================
   // App Strings
   // =======================
-  static const String appName = "Your App Name";
+  static const String appName = "Question Papers";
   static const String welcomeMessage = "Welcome to Your App!";
   static const String errorMessage = "Something went wrong, please try again.";
 

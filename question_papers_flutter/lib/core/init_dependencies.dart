@@ -27,6 +27,8 @@ Future<void> initDependencies() async {
   Get.put<LoginService>(LoginService(), permanent: true);
   Get.put<SignupService>(SignupService(), permanent: true);
   Get.put<VerifyOtpService>(VerifyOtpService(), permanent: true);
+  // Get.put<ForgotPasswordService>(ForgotPasswordService(), permanent: true);
+
   // Controllers
   Get.put<CourseController>(CourseController(), permanent: true);
   Get.put<YearController>(YearController(), permanent: true);
@@ -36,4 +38,5 @@ Future<void> initDependencies() async {
   Get.put<LoginController>(LoginController(), permanent: true);
   Get.put<SignController>(SignController(), permanent: true);
   Get.put<VerifyOtpController>(VerifyOtpController(), permanent: true);
+  // Get.put<ForgotPasswordController>(ForgotPasswordController(), permanent: true);
 }
