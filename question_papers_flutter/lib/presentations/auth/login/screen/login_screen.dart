@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:question_papers_flutter/common/bottom_navbar.dart';
+import 'package:question_papers_flutter/common/widgets/app_button.dart';
+import 'package:question_papers_flutter/common/widgets/app_textfield.dart';
 import 'package:question_papers_flutter/helpers/navigation_helper.dart';
 import '../controller/login_controller.dart';
 import 'package:question_papers_flutter/common/app_theme.dart';
-
 
 class LoginScreen extends StatelessWidget {
   LoginScreen({super.key});
@@ -23,7 +24,12 @@ class LoginScreen extends StatelessWidget {
       return;
     }
 
+    controller.isLoggedIn.value = true;
+
     final success = await controller.login(email, password);
+
+    controller.isLoggedIn.value = false;
+
     if (success) {
       NavigationHelper.pushAndRemoveUntil(const BottomNavBar());
     }
@@ -34,7 +40,9 @@ class LoginScreen extends StatelessWidget {
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
-      backgroundColor: isDark ? AppTheme.backgroundDark : AppTheme.backgroundLight,
+      backgroundColor: isDark
+          ? AppTheme.backgroundDark
+          : AppTheme.backgroundLight,
       body: Center(
         child: SingleChildScrollView(
           padding: const EdgeInsets.symmetric(horizontal: 32),
@@ -44,37 +52,70 @@ class LoginScreen extends StatelessWidget {
               Text(
                 "Login",
                 style: TextStyle(
-                  fontSize: 28,
+                  fontSize: 34,
                   fontWeight: FontWeight.bold,
-                  color: isDark ? AppTheme.textColorDark : AppTheme.textColorLight,
+                  color: isDark
+                      ? AppTheme.textColorDark
+                      : AppTheme.textColorLight,
                 ),
               ),
               const SizedBox(height: 30),
-              TextField(
+
+              // ✉️ Email Field
+              AppTextField(
+                label: "Email",
                 controller: emailController,
-                decoration: const InputDecoration(labelText: "Email"),
+                textInputAction: TextInputAction.next,
               ),
               const SizedBox(height: 20),
-              TextField(
+
+              // 🔒 Password Field
+              AppTextField(
+                label: "Password",
                 controller: passwordController,
-                decoration: const InputDecoration(labelText: "Password"),
-                obscureText: true,
+                isPassword: true,
               ),
               const SizedBox(height: 30),
-              Obx(() => ElevatedButton(
-                    onPressed: controller.isLoggedIn.value ? null : _login,
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: AppTheme.primaryColor,
-                      minimumSize: const Size(double.infinity, 50),
+
+              // 🔘 Login Button
+              Obx(
+                () => AppButton(
+                  label: "Login",
+                  isLoading: controller.isLoggedIn.value,
+                  onPressed: controller.isLoggedIn.value ? () {} : _login,
+                ),
+              ),
+              const SizedBox(height: 10),
+              TextButton(
+                onPressed: () {},
+                child: Text(
+                  "Forgot Password?",
+                  style: TextStyle(color: AppTheme.primaryColor),
+                ),
+              ),
+              const SizedBox(height: 10),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    "Don't have an account?",
+                    style: TextStyle(
+                      color: isDark
+                          ? AppTheme.textColorDark
+                          : AppTheme.textColorLight,
                     ),
+                  ),
+                  TextButton(
+                    onPressed: () {
+                      // navigation to sign up screen
+                    },
                     child: Text(
-                      "Login",
-                      style: TextStyle(
-                        color: isDark ? AppTheme.textColorLight : AppTheme.textColorDark,
-                        fontSize: 16,
-                      ),
+                      "Sign Up",
+                      style: TextStyle(color: AppTheme.primaryColor),
                     ),
-                  )),
+                  ),
+                ],
+              ),
             ],
           ),
         ),
