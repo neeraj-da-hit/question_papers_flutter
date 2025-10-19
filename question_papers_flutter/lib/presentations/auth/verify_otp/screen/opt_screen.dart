@@ -2,10 +2,9 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
-import 'package:question_papers_flutter/common/widgets/app_button.dart';
 import 'package:question_papers_flutter/common/app_theme.dart';
+import 'package:question_papers_flutter/common/widgets/app_button.dart';
 import 'package:question_papers_flutter/presentations/auth/verify_otp/controller/verify_otp_controller.dart';
-import 'package:question_papers_flutter/presentations/auth/verify_forgot_password_otp/controller/forgot_password_otp_controller.dart';
 
 class VerifyOtpScreen extends StatefulWidget {
   final String email;
@@ -22,11 +21,9 @@ class VerifyOtpScreen extends StatefulWidget {
 }
 
 class _VerifyOtpScreenState extends State<VerifyOtpScreen> {
-  final VerifyOtpController _signupController = Get.find<VerifyOtpController>();
-  final ForgotPasswordOtpController _forgotController =
-      Get.find<ForgotPasswordOtpController>();
+  final VerifyOtpController _otpController = Get.find<VerifyOtpController>();
 
-  final TextEditingController _otpController = TextEditingController();
+  final TextEditingController _pinController = TextEditingController();
   final RxInt _secondsRemaining = 60.obs;
   Timer? _timer;
 
@@ -51,18 +48,15 @@ class _VerifyOtpScreenState extends State<VerifyOtpScreen> {
   void _resendOtp() {
     if (_secondsRemaining.value == 0) {
       _startTimer();
-      if (widget.isFromForgotPassword) {
-        // _forgotController.resendOtp(widget.email);
-      } else {
-        // Optionally implement signup OTP resend if needed
-      }
+      // TODO: call resend OTP API if implemented
+      Get.snackbar("Info", "OTP resent to ${widget.email}");
     }
   }
 
   @override
   void dispose() {
     _timer?.cancel();
-    _otpController.dispose();
+    _pinController.dispose();
     super.dispose();
   }
 
@@ -70,10 +64,6 @@ class _VerifyOtpScreenState extends State<VerifyOtpScreen> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
-
-    final RxBool isLoading = widget.isFromForgotPassword
-        ? _forgotController.isLoading
-        : _signupController.isLoading;
 
     return Scaffold(
       backgroundColor: isDark
@@ -121,15 +111,14 @@ class _VerifyOtpScreenState extends State<VerifyOtpScreen> {
               ),
               const SizedBox(height: 32),
 
-              /// OTP Input using pin_code_fields
+              // OTP Input
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 24.0),
                 child: PinCodeTextField(
                   appContext: context,
                   length: 6,
-                  controller: _otpController,
+                  controller: _pinController,
                   keyboardType: TextInputType.number,
-                  autoDisposeControllers: false,
                   animationType: AnimationType.fade,
                   pinTheme: PinTheme(
                     shape: PinCodeFieldShape.box,
@@ -149,45 +138,42 @@ class _VerifyOtpScreenState extends State<VerifyOtpScreen> {
                   ),
                   animationDuration: const Duration(milliseconds: 200),
                   enableActiveFill: true,
-                  onCompleted: (_) {
-                    // optional auto-submit
-                  },
                   onChanged: (_) {},
                   cursorColor: AppTheme.primaryColor,
                 ),
               ),
               const SizedBox(height: 24),
 
-              // Verify button
+              // Verify Button
               Obx(
                 () => AppButton(
                   label: "Verify OTP",
-                  isLoading: isLoading.value,
+                  isLoading: _otpController.isLoading.value,
                   onPressed: () {
-                    final otp = _otpController.text.trim();
+                    final otp = _pinController.text.trim();
                     if (otp.isEmpty || otp.length < 6) {
                       Get.snackbar("Error", "Please enter the 6-digit OTP");
                       return;
                     }
+
                     if (widget.isFromForgotPassword) {
-                      _forgotController.verifyForgotPasswordOtp(
-                        widget.email,
-                        otp,
-                      );
+                      _otpController.verifyForgotPasswordOtp(widget.email, otp);
                     } else {
-                      _signupController.verifyOtp(widget.email, otp);
+                      _otpController.verifyOtp(widget.email, otp);
                     }
                   },
                 ),
               ),
               const SizedBox(height: 20),
 
-              // Resend OTP with countdown
+              // Resend OTP
               Obx(() {
                 final seconds = _secondsRemaining.value;
                 final canResend = seconds == 0;
                 return TextButton(
-                  onPressed: canResend ? _resendOtp : null,
+                  onPressed: widget.isFromForgotPassword && canResend
+                      ? _resendOtp
+                      : null,
                   child: Text(
                     canResend ? "Resend OTP" : "Resend OTP in ${seconds}s",
                     style: TextStyle(

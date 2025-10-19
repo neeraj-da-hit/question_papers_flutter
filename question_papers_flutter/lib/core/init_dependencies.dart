@@ -5,7 +5,6 @@ import 'package:question_papers_flutter/presentations/auth/login/controller/logi
 import 'package:question_papers_flutter/presentations/auth/login/service/login_service.dart';
 import 'package:question_papers_flutter/presentations/auth/signup/controller/sign_controller.dart';
 import 'package:question_papers_flutter/presentations/auth/signup/service/signup_service.dart';
-import 'package:question_papers_flutter/presentations/auth/verify_forgot_password_otp/controller/forgot_password_otp_controller.dart';
 import 'package:question_papers_flutter/presentations/auth/verify_otp/controller/verify_otp_controller.dart';
 import 'package:question_papers_flutter/presentations/auth/verify_otp/service/verify_otp_service.dart';
 import 'package:question_papers_flutter/presentations/main/course/controller/course_controller.dart';
@@ -45,8 +44,8 @@ Future<void> initDependencies() async {
     ForgotPasswordController(),
     permanent: true,
   );
-  Get.put<ForgotPasswordOtpController>(
-    ForgotPasswordOtpController(),
-    permanent: true,
-  );
+  // Get.put<ForgotPasswordOtpController>(
+  //   ForgotPasswordOtpController(),
+  //   permanent: true,
+  // );
 }

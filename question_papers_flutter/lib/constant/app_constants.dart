@@ -14,6 +14,7 @@ class AppConstants {
   static const String paper = "api/paper";
   static const String coursesEndpoint = "courses";
   static const String uploadPdfEndpoint = "upload/pdf";
+  static const String resetPassword = "api/auth/reset-password";
 
   //auth
   static const String login = "api/auth/login";
