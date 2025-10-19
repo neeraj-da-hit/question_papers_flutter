@@ -12,9 +12,9 @@ class BottomNavBar extends StatefulWidget {
 class _BottomNavBarState extends State<BottomNavBar> {
   int _selectedIndex = 0;
 
-  final List<Widget> _screens = const [
-    CourseScreen(),
-    CourseScreen(),
+  final List<Widget> _screens = [
+    const CourseScreen(),
+    const CourseScreen(),
     ProfielScreen()
   ];
 

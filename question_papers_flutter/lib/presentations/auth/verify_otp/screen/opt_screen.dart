@@ -117,6 +117,7 @@ class _VerifyOtpScreenState extends State<VerifyOtpScreen> {
                 child: PinCodeTextField(
                   appContext: context,
                   length: 6,
+                  autoDisposeControllers: false,
                   controller: _pinController,
                   keyboardType: TextInputType.number,
                   animationType: AnimationType.fade,

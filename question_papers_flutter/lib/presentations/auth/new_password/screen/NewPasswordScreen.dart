@@ -10,7 +10,7 @@ class NewPasswordScreen extends StatelessWidget {
 
   NewPasswordScreen({super.key, required this.email});
 
-  final NewPasswordController _controller = Get.put(NewPasswordController());
+  final NewPasswordController _controller = Get.find<NewPasswordController>();
 
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _confirmController = TextEditingController();

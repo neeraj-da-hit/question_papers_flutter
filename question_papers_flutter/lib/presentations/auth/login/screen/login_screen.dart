@@ -12,7 +12,7 @@ import 'package:question_papers_flutter/common/app_theme.dart';
 class LoginScreen extends StatelessWidget {
   LoginScreen({super.key});
 
-  final LoginController controller = Get.put(LoginController());
+  final LoginController controller = Get.find<LoginController>();
 
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
@@ -67,6 +67,7 @@ class LoginScreen extends StatelessWidget {
               AppTextField(
                 label: "Email",
                 controller: emailController,
+                keyboardType: TextInputType.emailAddress,
                 textInputAction: TextInputAction.next,
               ),
               const SizedBox(height: 20),

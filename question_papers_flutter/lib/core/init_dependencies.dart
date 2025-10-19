@@ -3,6 +3,8 @@ import 'package:question_papers_flutter/presentations/auth/forgot_password/contr
 import 'package:question_papers_flutter/presentations/auth/forgot_password/service/forgot_password_service.dart';
 import 'package:question_papers_flutter/presentations/auth/login/controller/login_controller.dart';
 import 'package:question_papers_flutter/presentations/auth/login/service/login_service.dart';
+import 'package:question_papers_flutter/presentations/auth/new_password/controller/new_password_controller.dart';
+import 'package:question_papers_flutter/presentations/auth/new_password/service/new_password_service.dart';
 import 'package:question_papers_flutter/presentations/auth/signup/controller/sign_controller.dart';
 import 'package:question_papers_flutter/presentations/auth/signup/service/signup_service.dart';
 import 'package:question_papers_flutter/presentations/auth/verify_otp/controller/verify_otp_controller.dart';
@@ -11,6 +13,7 @@ import 'package:question_papers_flutter/presentations/main/course/controller/cou
 import 'package:question_papers_flutter/presentations/main/course/service/course_service.dart';
 import 'package:question_papers_flutter/presentations/main/paper/controller/paper_controller.dart';
 import 'package:question_papers_flutter/presentations/main/paper/service/paper_service.dart';
+import 'package:question_papers_flutter/presentations/main/profile/controller/profile_controller.dart';
 import 'package:question_papers_flutter/presentations/main/subject/controller/subject_controller.dart';
 import 'package:question_papers_flutter/presentations/main/subject/service/subject_service.dart';
 import 'package:question_papers_flutter/presentations/main/year/controller/year_controller.dart';
@@ -30,6 +33,7 @@ Future<void> initDependencies() async {
   Get.put<SignupService>(SignupService(), permanent: true);
   Get.put<VerifyOtpService>(VerifyOtpService(), permanent: true);
   Get.put<ForgotPasswordService>(ForgotPasswordService(), permanent: true);
+  Get.put<NewPasswordService>(NewPasswordService(), permanent: true);
 
   // Controllers
   Get.put<CourseController>(CourseController(), permanent: true);
@@ -44,6 +48,8 @@ Future<void> initDependencies() async {
     ForgotPasswordController(),
     permanent: true,
   );
+  Get.put<ProfileController>(ProfileController(), permanent: true);
+  Get.put<NewPasswordController>(NewPasswordController(), permanent: true);
   // Get.put<ForgotPasswordOtpController>(
   //   ForgotPasswordOtpController(),
   //   permanent: true,

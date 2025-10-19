@@ -10,7 +10,7 @@ import 'package:question_papers_flutter/presentations/auth/signup/controller/sig
 class SignupScreen extends StatelessWidget {
   SignupScreen({super.key});
 
-  final SignController _controller = Get.put(SignController());
+  final SignController _controller = Get.find<SignController>();
 
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();

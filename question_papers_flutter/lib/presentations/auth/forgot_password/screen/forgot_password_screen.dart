@@ -8,9 +8,8 @@ import 'package:question_papers_flutter/presentations/auth/forgot_password/contr
 class ForgotPasswordScreen extends StatelessWidget {
   ForgotPasswordScreen({super.key});
 
-  final ForgotPasswordController _controller = Get.put(
-    ForgotPasswordController(),
-  );
+  final ForgotPasswordController _controller =
+      Get.find<ForgotPasswordController>();
 
   final TextEditingController _emailController = TextEditingController();
 
