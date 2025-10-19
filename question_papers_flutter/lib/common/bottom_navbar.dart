@@ -14,8 +14,8 @@ class _BottomNavBarState extends State<BottomNavBar> {
 
   final List<Widget> _screens = [
     const CourseScreen(),
-    const CourseScreen(),
-    ProfielScreen()
+    ProfileScreen(),
+    // const CourseScreen(),
   ];
 
   void _onItemTapped(int index) {
@@ -35,7 +35,7 @@ class _BottomNavBarState extends State<BottomNavBar> {
         unselectedItemColor: Colors.grey,
         items: const [
           BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
-          BottomNavigationBarItem(icon: Icon(Icons.search), label: 'Search'),
+          // BottomNavigationBarItem(icon: Icon(Icons.search), label: 'Search'),
           BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profile'),
         ],
       ),

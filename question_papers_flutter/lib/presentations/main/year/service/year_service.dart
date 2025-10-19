@@ -8,7 +8,7 @@ class YearService {
 
   /// 📦 Fetch all semesters for a specific course
   Future<List<SemesterModel>> fetchSemesters(String courseId) async {
-    final url = AppConstants.yearSem +"/"+ courseId;
+    final url = "${AppConstants.yearSem}/$courseId";
 
     try {
       final response = await _network.getRequest(url);

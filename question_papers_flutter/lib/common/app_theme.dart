@@ -21,7 +21,7 @@ class AppTheme {
     colorScheme: const ColorScheme.light(
       primary: primaryColor,
       secondary: primaryColor,
-      background: backgroundLight,
+      surface: backgroundLight,
     ),
     scaffoldBackgroundColor: backgroundLight,
     appBarTheme: const AppBarTheme(
@@ -70,11 +70,10 @@ class AppTheme {
 
   // 🌙 DARK THEME
   static ThemeData darkTheme = ThemeData.dark().copyWith(
-    useMaterial3: true,
     colorScheme: const ColorScheme.dark(
       primary: primaryColor,
       secondary: primaryColor,
-      background: backgroundDark,
+      surface: backgroundDark,
     ),
     scaffoldBackgroundColor: backgroundDark,
     appBarTheme: const AppBarTheme(

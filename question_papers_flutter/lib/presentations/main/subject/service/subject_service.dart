@@ -7,7 +7,7 @@ class SubjectService {
   final NetworkManager _network = NetworkManager();
 
   Future<List<SubjectModel>> fetchSubjects(String subjectId) async {
-    final url = AppConstants.subject + "/" + subjectId;
+    final url = "${AppConstants.subject}/$subjectId";
 
     try {
       final response = await _network.getRequest(url);

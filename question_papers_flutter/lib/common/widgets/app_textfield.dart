@@ -9,13 +9,13 @@ class AppTextField extends StatefulWidget {
   final TextInputAction textInputAction;
 
   const AppTextField({
-    Key? key,
+    super.key,
     required this.label,
     this.controller,
     this.isPassword = false,
     this.keyboardType = TextInputType.text,
     this.textInputAction = TextInputAction.next,
-  }) : super(key: key);
+  });
 
   @override
   State<AppTextField> createState() => _AppTextFieldState();
