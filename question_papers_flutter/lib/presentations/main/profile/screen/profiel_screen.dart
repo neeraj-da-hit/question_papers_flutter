@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:question_papers_flutter/common/widgets/app_button.dart';
+import 'package:question_papers_flutter/helpers/navigation_helper.dart';
+import 'package:question_papers_flutter/presentations/auth/new_password/screen/NewPasswordScreen.dart';
 // import 'package:question_papers_flutter/presentations/main/profile/controller/profile_controller.dart';
 import 'package:question_papers_flutter/presentations/main/profile/widgets/logout_dialog_box.dart';
 import 'package:question_papers_flutter/presentations/main/profile/widgets/profile_info_tile.dart';
@@ -153,7 +155,11 @@ class ProfileScreen extends StatelessWidget {
                       size: 16,
                       color: isDark ? Colors.grey[400] : Colors.grey[600],
                     ),
-                    onTap: () {},
+                    onTap: () {
+                      NavigationHelper.push(
+                        NewPasswordScreen(email: mockUser['email']!),
+                      );
+                    },
                   ),
                   const SizedBox(height: 12),
                   Padding(

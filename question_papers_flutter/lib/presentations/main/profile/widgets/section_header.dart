@@ -22,7 +22,7 @@ class SectionHeader extends StatelessWidget {
     final bgColor = showBackground
         ? (isDark
               ? AppTheme.backgroundDark.withOpacity(0.6)
-              : AppTheme.backgroundLight.withOpacity(0.9))
+              : AppTheme.backgroundLight.withOpacity(1))
         : Colors.transparent;
 
     final textColor = isDark ? AppTheme.textColorDark : AppTheme.greyText;
