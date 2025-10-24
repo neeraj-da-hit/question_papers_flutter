@@ -14,6 +14,7 @@ import 'package:question_papers_flutter/presentations/main/course/service/course
 import 'package:question_papers_flutter/presentations/main/paper/controller/paper_controller.dart';
 import 'package:question_papers_flutter/presentations/main/paper/service/paper_service.dart';
 import 'package:question_papers_flutter/presentations/main/profile/controller/profile_controller.dart';
+import 'package:question_papers_flutter/presentations/main/profile/service/profile_service.dart';
 import 'package:question_papers_flutter/presentations/main/subject/controller/subject_controller.dart';
 import 'package:question_papers_flutter/presentations/main/subject/service/subject_service.dart';
 import 'package:question_papers_flutter/presentations/main/year/controller/year_controller.dart';
@@ -34,6 +35,7 @@ Future<void> initDependencies() async {
   Get.put<VerifyOtpService>(VerifyOtpService(), permanent: true);
   Get.put<ForgotPasswordService>(ForgotPasswordService(), permanent: true);
   Get.put<NewPasswordService>(NewPasswordService(), permanent: true);
+  Get.put<ProfileService>(ProfileService(), permanent: true);
 
   // Controllers
   Get.put<CourseController>(CourseController(), permanent: true);
@@ -50,6 +52,7 @@ Future<void> initDependencies() async {
   );
   Get.put<ProfileController>(ProfileController(), permanent: true);
   Get.put<NewPasswordController>(NewPasswordController(), permanent: true);
+  Get.put<ProfileController>(ProfileController(), permanent: true);
   // Get.put<ForgotPasswordOtpController>(
   //   ForgotPasswordOtpController(),
   //   permanent: true,

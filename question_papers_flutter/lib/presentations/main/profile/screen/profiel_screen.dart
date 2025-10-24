@@ -1,30 +1,47 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:question_papers_flutter/common/app_theme.dart';
 import 'package:question_papers_flutter/common/widgets/app_button.dart';
 import 'package:question_papers_flutter/helpers/navigation_helper.dart';
 import 'package:question_papers_flutter/presentations/auth/new_password/screen/NewPasswordScreen.dart';
-// import 'package:question_papers_flutter/presentations/main/profile/controller/profile_controller.dart';
+import 'package:question_papers_flutter/presentations/main/profile/controller/profile_controller.dart';
 import 'package:question_papers_flutter/presentations/main/profile/widgets/logout_dialog_box.dart';
 import 'package:question_papers_flutter/presentations/main/profile/widgets/profile_info_tile.dart';
 import 'package:question_papers_flutter/presentations/main/profile/widgets/section_header.dart';
-import 'package:question_papers_flutter/common/app_theme.dart';
 
-class ProfileScreen extends StatelessWidget {
+class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
 
   @override
+  State<ProfileScreen> createState() => _ProfileScreenState();
+}
+
+class _ProfileScreenState extends State<ProfileScreen> {
+  final ProfileController profileController = Get.put(ProfileController());
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    // 🔥 Auto-fetch when the screen appears
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final id = profileController.loginController.user.value?.id ?? '';
+      if (id.isNotEmpty) {
+        profileController.fetchProfileData(id);
+      }
+    });
+  }
+
+  // 🔄 Pull-to-refresh handler
+  Future<void> _onRefresh() async {
+    final id = profileController.loginController.user.value?.id ?? '';
+    if (id.isNotEmpty) {
+      await profileController.fetchProfileData(id);
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
-    // final controller = Get.find<ProfileController>();
-
-    final mockUser = {
-      "name": "Sophia Carter",
-      "email": "sophia.carter@email.com",
-      "role": "Student",
-      "studentId": "1234567890",
-      "major": "Computer Science",
-      "institution": "University of Technology",
-    };
-
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
 
@@ -38,8 +55,12 @@ class ProfileScreen extends StatelessWidget {
         ),
         centerTitle: true,
         actions: [
+          // ✏️ Edit Button
           TextButton(
-            onPressed: () {},
+            onPressed: () {
+              // TODO: Navigate to edit profile screen when implemented
+              Get.snackbar("Edit", "Edit profile feature coming soon!");
+            },
             child: Text(
               "Edit",
               style: TextStyle(
@@ -51,135 +72,161 @@ class ProfileScreen extends StatelessWidget {
           ),
         ],
       ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
-        child: Column(
-          children: [
-            // 👤 Avatar + Name + Email
-            Column(
-              children: [
-                CircleAvatar(
-                  radius: 50,
-                  backgroundColor: isDark ? Colors.grey[800] : Colors.grey[300],
-                  backgroundImage: const AssetImage(
-                    'assets/images/hinata.jpeg',
-                  ),
-                ),
-                const SizedBox(height: 12),
-                Text(
-                  mockUser['name']!,
-                  style: TextStyle(
-                    fontSize: 22,
-                    fontWeight: FontWeight.w700,
-                    color: isDark
-                        ? AppTheme.textColorDark
-                        : AppTheme.textColorLight,
-                  ),
-                ),
-                const SizedBox(height: 4),
-                Text(
-                  mockUser['email']!,
-                  style: TextStyle(
-                    fontSize: 14,
-                    color: isDark ? Colors.grey[400] : Colors.grey[600],
-                  ),
-                ),
+      body: Obx(() {
+        if (profileController.isLoading.value) {
+          return const Center(child: CircularProgressIndicator());
+        }
+
+        final profile = profileController.data.value?.user;
+        if (profile == null) {
+          return RefreshIndicator(
+            onRefresh: _onRefresh,
+            child: ListView(
+              physics: const AlwaysScrollableScrollPhysics(),
+              children: const [
+                SizedBox(height: 300),
+                Center(child: Text("No profile data found")),
               ],
             ),
-            const SizedBox(height: 28),
+          );
+        }
 
-            // 📄 Personal Info Card
-            _buildCard(
-              context,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const SectionHeader(
-                    title: "Personal Information",
-                    showBackground: true,
-                  ),
-                  ProfileInfoTile(title: "Name", value: mockUser['name']!),
-                  ProfileInfoTile(
-                    title: "Email",
-                    value: mockUser['email']!,
-                    showDivider: false,
-                  ),
-                ],
-              ),
-            ),
-
-            const SizedBox(height: 20),
-
-            // 📚 Academic Info Card
-            _buildCard(
-              context,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const SectionHeader(
-                    title: "Academic Details",
-                    showBackground: true,
-                  ),
-                  ProfileInfoTile(title: "Role", value: mockUser['role']!),
-                  ProfileInfoTile(
-                    title: "Student ID",
-                    value: mockUser['studentId']!,
-                  ),
-                  ProfileInfoTile(title: "Major", value: mockUser['major']!),
-                  ProfileInfoTile(
-                    title: "Institution",
-                    value: mockUser['institution']!,
-                    showDivider: false,
-                  ),
-                ],
-              ),
-            ),
-
-            const SizedBox(height: 20),
-
-            // 🔒 Security Card
-            _buildCard(
-              context,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const SectionHeader(title: "Security", showBackground: true),
-                  ListTile(
-                    dense: true,
-                    title: const Text(
-                      "Change Password",
-                      style: TextStyle(fontSize: 15),
+        return RefreshIndicator(
+          onRefresh: _onRefresh,
+          color: theme.colorScheme.primary,
+          child: SingleChildScrollView(
+            physics: const AlwaysScrollableScrollPhysics(),
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+            child: Column(
+              children: [
+                // 👤 Avatar + Name + Email
+                Column(
+                  children: [
+                    CircleAvatar(
+                      radius: 50,
+                      backgroundColor: isDark
+                          ? Colors.grey[800]
+                          : Colors.grey[300],
+                      backgroundImage: const AssetImage(
+                        'assets/images/hinata.jpeg',
+                      ),
                     ),
-                    trailing: Icon(
-                      Icons.arrow_forward_ios,
-                      size: 16,
-                      color: isDark ? Colors.grey[400] : Colors.grey[600],
+                    const SizedBox(height: 12),
+                    Text(
+                      profile.name,
+                      style: TextStyle(
+                        fontSize: 22,
+                        fontWeight: FontWeight.w700,
+                        color: isDark
+                            ? AppTheme.textColorDark
+                            : AppTheme.textColorLight,
+                      ),
                     ),
-                    onTap: () {
-                      NavigationHelper.push(
-                        NewPasswordScreen(email: mockUser['email']!),
-                      );
-                    },
-                  ),
-                  const SizedBox(height: 12),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
-                    child: AppButton(
-                      label: "Logout",
-                      onPressed: () {
-                        Get.dialog(const LogoutDialogBox());
-                      },
-                      isDisabled: false,
+                    const SizedBox(height: 4),
+                    Text(
+                      profile.email,
+                      style: TextStyle(
+                        fontSize: 14,
+                        color: isDark ? Colors.grey[400] : Colors.grey[600],
+                      ),
                     ),
+                  ],
+                ),
+                const SizedBox(height: 28),
+
+                // 📄 Personal Info
+                _buildCard(
+                  context,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const SectionHeader(
+                        title: "Personal Information",
+                        showBackground: true,
+                      ),
+                      ProfileInfoTile(title: "Name", value: profile.name),
+                      ProfileInfoTile(title: "Email", value: profile.email),
+                      ProfileInfoTile(
+                        title: "Phone",
+                        value: profile.phone.toString(),
+                        showDivider: false,
+                      ),
+                    ],
                   ),
-                  const SizedBox(height: 16),
-                ],
-              ),
+                ),
+
+                const SizedBox(height: 20),
+
+                // 🎓 Course Info
+                _buildCard(
+                  context,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const SectionHeader(
+                        title: "Course Details",
+                        showBackground: true,
+                      ),
+                      ProfileInfoTile(title: "Course", value: profile.course),
+                      ProfileInfoTile(
+                        title: "Verified",
+                        value: profile.isVerified ? "Yes" : "No",
+                        showDivider: false,
+                      ),
+                    ],
+                  ),
+                ),
+
+                const SizedBox(height: 20),
+
+                // 🔒 Security + Logout
+                _buildCard(
+                  context,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const SectionHeader(
+                        title: "Security",
+                        showBackground: true,
+                      ),
+                      ListTile(
+                        dense: true,
+                        title: const Text("Change Password"),
+                        trailing: Icon(
+                          Icons.arrow_forward_ios,
+                          size: 16,
+                          color: isDark ? Colors.grey[400] : Colors.grey[600],
+                        ),
+                        onTap: () {
+                          NavigationHelper.push(
+                            NewPasswordScreen(email: profile.email),
+                          );
+                        },
+                      ),
+                      const SizedBox(height: 12),
+
+                      // 🔘 Logout Button (with dialog)
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 16),
+                        child: AppButton(
+                          label: "Logout",
+                          onPressed: () {
+                            Get.dialog(const LogoutDialogBox());
+                          },
+                          isDisabled: false,
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+                    ],
+                  ),
+                ),
+
+                const SizedBox(height: 30),
+              ],
             ),
-            const SizedBox(height: 30),
-          ],
-        ),
-      ),
+          ),
+        );
+      }),
     );
   }
 

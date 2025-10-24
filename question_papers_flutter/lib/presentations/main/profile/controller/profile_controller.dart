@@ -1,13 +1,41 @@
-// lib/presentations/main/profile/controller/profile_controller.dart
 import 'package:get/get.dart';
 import 'package:question_papers_flutter/presentations/auth/login/controller/login_controller.dart';
 import 'package:question_papers_flutter/presentations/auth/login/screen/login_screen.dart';
+import 'package:question_papers_flutter/presentations/main/profile/model/user_profile_response.dart';
+import 'package:question_papers_flutter/presentations/main/profile/service/profile_service.dart';
 
 class ProfileController extends GetxController {
-  final LoginController _loginController = Get.find<LoginController>();
+  final ProfileService _profileService = ProfileService();
+  final LoginController loginController = Get.find<LoginController>();
+
+  var data = Rxn<UserProfileResponse>();
+  var isLoading = false.obs;
+
+  @override
+  void onInit() {
+    super.onInit();
+    // Fetch profile automatically on init using user id
+    final id = loginController.user.value?.id ?? '';
+    if (id.isNotEmpty) {
+      fetchProfileData(id);
+    }
+  }
+
+  Future<void> fetchProfileData(String id) async {
+    if (id.isEmpty) return;
+    isLoading.value = true;
+    try {
+      final res = await _profileService.fetchProfileData(id);
+      data.value = UserProfileResponse.fromJson(res);
+    } catch (e) {
+      Get.snackbar("Error", "Failed to fetch profile data: $e");
+    } finally {
+      isLoading.value = false;
+    }
+  }
 
   Future<void> logout() async {
-    await _loginController.logout(); // call your existing logout logic
-    Get.offAll(() => LoginScreen()); // navigate to login
+    await loginController.logout();
+    Get.offAll(() => LoginScreen());
   }
 }

@@ -22,6 +22,7 @@ class AppConstants {
   static const String veriyOtp = "api/auth/verify-otp";
   static const String forgotPassword = "api/auth/forgot-password";
   static const String verifyForgotOtp = "api/auth/verify-reset-otp";
+  static const String userProfile = "api/auth/profile";
 
   // =======================
   // App Strings
@@ -35,6 +36,8 @@ class AppConstants {
   // =======================
   static const String prefUserToken = "PREF_USER_TOKEN";
   static const String prefUserName = "PREF_USER_NAME";
+  static const String prefUserEmail = "PREF_USER_EMAIL";
+  static const String prefUserId = "PREF_USER_ID";
 
   // =======================
   // Colors

@@ -5,7 +5,6 @@ import 'package:question_papers_flutter/presentations/auth/login/service/login_s
 import 'package:shared_preferences/shared_preferences.dart';
 import '../model/user_model.dart';
 
-
 class LoginController extends GetxController {
   final LoginService _service = LoginService();
 
@@ -22,24 +21,24 @@ class LoginController extends GetxController {
   void saveToPrefs(UserModel u, String t) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString(AppConstants.prefUserToken, t);
+    await prefs.setString(AppConstants.prefUserEmail, u.email);
+    await prefs.setString(AppConstants.prefUserId, u.id);
     await prefs.setString(AppConstants.prefUserName, jsonEncode(u.toJson()));
   }
 
   Future<void> loadFromPrefs() async {
-  final prefs = await SharedPreferences.getInstance();
-  final t = prefs.getString(AppConstants.prefUserToken);
-  final u = prefs.getString(AppConstants.prefUserName);
+    final prefs = await SharedPreferences.getInstance();
+    final t = prefs.getString(AppConstants.prefUserToken);
+    final u = prefs.getString(AppConstants.prefUserName);
 
-  if (t != null && u != null) {
-    token.value = t;
-    user.value = UserModel.fromJson(jsonDecode(u));
-    isLoggedIn.value = true;
-  } else {
-    isLoggedIn.value = false; // default false
+    if (t != null && u != null) {
+      token.value = t;
+      user.value = UserModel.fromJson(jsonDecode(u));
+      isLoggedIn.value = true;
+    } else {
+      isLoggedIn.value = false; // default false
+    }
   }
-}
-
-
 
   Future<bool> login(String email, String password) async {
     try {
@@ -56,7 +55,7 @@ class LoginController extends GetxController {
     } catch (e) {
       Get.snackbar("Login Failed", e.toString());
       return false;
-    }
+    } finally {}
   }
 
   Future<void> logout() async {
