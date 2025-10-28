@@ -18,6 +18,8 @@ class UserProfile {
   final String course;
   final int phone;
   final bool isResetVerified;
+  final String profilePic;
+  final String profilePublicId;
   final DateTime createdAt;
   final DateTime updatedAt;
   final int v;
@@ -30,6 +32,8 @@ class UserProfile {
     required this.course,
     required this.phone,
     required this.isResetVerified,
+    required this.profilePic,
+    required this.profilePublicId,
     required this.createdAt,
     required this.updatedAt,
     required this.v,
@@ -44,6 +48,8 @@ class UserProfile {
       course: json['course'],
       phone: json['phone'],
       isResetVerified: json['is_reset_verified'],
+      profilePic: json['profilePic'],
+      profilePublicId: json['profilePublicId'],
       createdAt: DateTime.parse(json['createdAt']),
       updatedAt: DateTime.parse(json['updatedAt']),
       v: json['__v'],
@@ -58,6 +64,8 @@ class UserProfile {
     'course': course,
     'phone': phone,
     'is_reset_verified': isResetVerified,
+    'profilePic': profilePic,
+    'profilePublicId': profilePublicId,
     'createdAt': createdAt.toIso8601String(),
     'updatedAt': updatedAt.toIso8601String(),
     '__v': v,

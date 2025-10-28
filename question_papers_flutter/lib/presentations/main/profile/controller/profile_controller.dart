@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import 'package:question_papers_flutter/helpers/navigation_helper.dart';
 import 'package:question_papers_flutter/presentations/auth/login/controller/login_controller.dart';
 import 'package:question_papers_flutter/presentations/auth/login/screen/login_screen.dart';
 import 'package:question_papers_flutter/presentations/main/profile/model/user_profile_response.dart';
@@ -29,6 +30,8 @@ class ProfileController extends GetxController {
       data.value = UserProfileResponse.fromJson(res);
     } catch (e) {
       Get.snackbar("Error", "Failed to fetch profile data: $e");
+      logout();
+      NavigationHelper.pushAndRemoveUntil(LoginScreen());
     } finally {
       isLoading.value = false;
     }

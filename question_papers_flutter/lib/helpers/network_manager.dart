@@ -187,6 +187,36 @@ class NetworkManager extends GetxService {
     }
   }
 
+  Future<dynamic> uploadFileWithFields({
+    required String endpoint,
+    required File imageFile,
+    required Map<String, String> fields,
+    String fieldName = 'image',
+    Map<String, String>? headers,
+  }) async {
+    final uri = Uri.parse('$baseUrl/$endpoint');
+
+    final request = http.MultipartRequest('POST', uri);
+
+    final effectiveHeaders = Map<String, String>.from(
+      headers ?? _defaultHeaders,
+    )..remove('Content-Type'); // important!
+    request.headers.addAll(effectiveHeaders);
+
+    // text fields
+    request.fields.addAll(fields);
+
+    // image file
+    request.files.add(
+      await http.MultipartFile.fromPath(fieldName, imageFile.path),
+    );
+
+    final streamedResponse = await request.send();
+    final response = await http.Response.fromStream(streamedResponse);
+
+    return _handleResponse(response, uri);
+  }
+
   // ===========================================================
   // 🧩 RESPONSE HANDLER
   // ===========================================================

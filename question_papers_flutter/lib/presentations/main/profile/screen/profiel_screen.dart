@@ -107,10 +107,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       backgroundColor: isDark
                           ? Colors.grey[800]
                           : Colors.grey[300],
-                      backgroundImage: const AssetImage(
-                        'assets/images/hinata.jpeg',
-                      ),
+                      backgroundImage: profile.profilePic.isNotEmpty
+                          ? NetworkImage(profile.profilePic)
+                          : const AssetImage('assets/images/hinata.jpeg')
+                                as ImageProvider,
                     ),
+
                     const SizedBox(height: 12),
                     Text(
                       profile.name,
