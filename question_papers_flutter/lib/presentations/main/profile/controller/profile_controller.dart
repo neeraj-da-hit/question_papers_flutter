@@ -32,7 +32,7 @@ class ProfileController extends GetxController {
       data.value = UserProfileResponse.fromJson(res);
     } catch (e) {
       Get.snackbar("Error", "Failed to fetch profile data: $e");
-      logout();
+      await logout();
       NavigationHelper.pushAndRemoveUntil(LoginScreen());
     } finally {
       isLoading.value = false;
@@ -63,11 +63,13 @@ class ProfileController extends GetxController {
         profilePic: profilePic,
       );
 
-      // Update local data model with new response
+      // ✅ Safely parse updated response
       if (res['user'] != null) {
         data.value = UserProfileResponse.fromJson(res);
         Get.back(); // Close update screen on success
         Get.snackbar("Success", "Profile updated successfully");
+      } else {
+        Get.snackbar("Warning", "Profile updated but no user data returned");
       }
     } catch (e) {
       Get.snackbar("Error", "Failed to update profile: $e");
@@ -81,4 +83,10 @@ class ProfileController extends GetxController {
     await loginController.logout();
     Get.offAll(() => LoginScreen());
   }
+
+  /// 🧩 Convenience getters for UI (null-safe)
+  String get userName => data.value?.user?.name ?? 'Unknown';
+  String get userEmail => data.value?.user?.email ?? 'No email';
+  String get userCourse => data.value?.user?.course ?? 'Not set';
+  String get userProfilePic => data.value?.user?.profilePic ?? '';
 }

@@ -23,8 +23,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-
-    // 🔥 Auto-fetch when the screen appears
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final id = profileController.loginController.user.value?.id ?? '';
       if (id.isNotEmpty) {
@@ -33,7 +31,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
     });
   }
 
-  // 🔄 Pull-to-refresh handler
   Future<void> _onRefresh() async {
     final id = profileController.loginController.user.value?.id ?? '';
     if (id.isNotEmpty) {
@@ -56,12 +53,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
         ),
         centerTitle: true,
         actions: [
-          // ✏️ Edit Button
           TextButton(
             onPressed: () {
               final profileData = profileController.data.value?.user;
               if (profileData != null) {
-                // Directly pass the existing user object
                 Get.to(() => ProfileUpdateScreen(profile: profileData));
               } else {
                 Get.snackbar("Error", "No profile data to edit.");
@@ -113,16 +108,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       backgroundColor: isDark
                           ? Colors.grey[800]
                           : Colors.grey[300],
-                      backgroundImage:
-                          (profile.profilePic != null &&
-                              profile.profilePic!.isNotEmpty)
+                      backgroundImage: (profile.profilePic?.isNotEmpty ?? false)
                           ? NetworkImage(profile.profilePic!) as ImageProvider
                           : const AssetImage('assets/images/hinata.jpeg'),
                     ),
-
                     const SizedBox(height: 12),
                     Text(
-                      profile.name,
+                      profile.name ?? 'No Name',
                       style: TextStyle(
                         fontSize: 22,
                         fontWeight: FontWeight.w700,
@@ -133,7 +125,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     ),
                     const SizedBox(height: 4),
                     Text(
-                      profile.email,
+                      profile.email ?? 'No Email',
                       style: TextStyle(
                         fontSize: 14,
                         color: isDark ? Colors.grey[400] : Colors.grey[600],
@@ -143,7 +135,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 ),
                 const SizedBox(height: 28),
 
-                // 📄 Personal Info
+                // 📄 Personal Info & Course Info
                 _buildCard(
                   context,
                   child: Column(
@@ -153,33 +145,25 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         title: "Personal Information",
                         showBackground: true,
                       ),
-                      ProfileInfoTile(title: "Name", value: profile.name),
-                      ProfileInfoTile(title: "Email", value: profile.email),
+                      ProfileInfoTile(
+                        title: "Name",
+                        value: profile.name ?? 'N/A',
+                      ),
+                      ProfileInfoTile(
+                        title: "Email",
+                        value: profile.email ?? 'N/A',
+                      ),
                       ProfileInfoTile(
                         title: "Phone",
-                        value: profile.phone.toString(),
-                        showDivider: false,
+                        value: profile.phone?.toString() ?? 'N/A',
                       ),
-                    ],
-                  ),
-                ),
-
-                const SizedBox(height: 20),
-
-                // 🎓 Course Info
-                _buildCard(
-                  context,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const SectionHeader(
-                        title: "Course Details",
-                        showBackground: true,
+                      ProfileInfoTile(
+                        title: "Course",
+                        value: profile.course ?? 'N/A',
                       ),
-                      ProfileInfoTile(title: "Course", value: profile.course),
                       ProfileInfoTile(
                         title: "Verified",
-                        value: profile.isVerified ? "Yes" : "No",
+                        value: profile.isVerified == true ? "Yes" : "No",
                         showDivider: false,
                       ),
                     ],
@@ -208,13 +192,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         ),
                         onTap: () {
                           NavigationHelper.push(
-                            NewPasswordScreen(email: profile.email),
+                            NewPasswordScreen(email: profile.email ?? ''),
                           );
                         },
                       ),
                       const SizedBox(height: 12),
-
-                      // 🔘 Logout Button (with dialog)
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 16),
                         child: AppButton(
@@ -229,7 +211,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     ],
                   ),
                 ),
-
                 const SizedBox(height: 30),
               ],
             ),

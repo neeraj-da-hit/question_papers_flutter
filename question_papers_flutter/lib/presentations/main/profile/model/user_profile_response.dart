@@ -1,58 +1,66 @@
 class UserProfileResponse {
-  final UserProfile user;
+  final UserProfile? user;
 
-  UserProfileResponse({required this.user});
+  UserProfileResponse({this.user});
 
   factory UserProfileResponse.fromJson(Map<String, dynamic> json) {
-    return UserProfileResponse(user: UserProfile.fromJson(json['user']));
+    return UserProfileResponse(
+      user: json['user'] != null ? UserProfile.fromJson(json['user']) : null,
+    );
   }
 
-  Map<String, dynamic> toJson() => {'user': user.toJson()};
+  Map<String, dynamic> toJson() => {'user': user?.toJson()};
 }
 
 class UserProfile {
-  final String id;
-  final String name;
-  final String email;
-  final bool isVerified;
-  final String course;
-  final int phone;
-  final bool isResetVerified;
-  final String profilePic;
-  final String profilePublicId;
-  final DateTime createdAt;
-  final DateTime updatedAt;
-  final int v;
+  final String? id;
+  final String? name;
+  final String? email;
+  final bool? isVerified;
+  final String? course;
+  final int? phone;
+  final bool? isResetVerified;
+  final String? profilePic;
+  final String? profilePublicId;
+  final DateTime? createdAt;
+  final DateTime? updatedAt;
+  final int? v;
 
   UserProfile({
-    required this.id,
-    required this.name,
-    required this.email,
-    required this.isVerified,
-    required this.course,
-    required this.phone,
-    required this.isResetVerified,
-    required this.profilePic,
-    required this.profilePublicId,
-    required this.createdAt,
-    required this.updatedAt,
-    required this.v,
+    this.id,
+    this.name,
+    this.email,
+    this.isVerified,
+    this.course,
+    this.phone,
+    this.isResetVerified,
+    this.profilePic,
+    this.profilePublicId,
+    this.createdAt,
+    this.updatedAt,
+    this.v,
   });
 
   factory UserProfile.fromJson(Map<String, dynamic> json) {
     return UserProfile(
-      id: json['_id'],
-      name: json['name'],
-      email: json['email'],
-      isVerified: json['is_verified'],
-      course: json['course'],
-      phone: json['phone'],
-      isResetVerified: json['is_reset_verified'],
-      profilePic: json['profilePic'],
-      profilePublicId: json['profilePublicId'],
-      createdAt: DateTime.parse(json['createdAt']),
-      updatedAt: DateTime.parse(json['updatedAt']),
-      v: json['__v'],
+      id: json['_id'] as String?,
+      name: json['name'] as String?,
+      email: json['email'] as String?,
+      isVerified: json['is_verified'] as bool?,
+      course: json['course'] as String?,
+      phone: json['phone'] is int
+          ? json['phone']
+          : int.tryParse(json['phone']?.toString() ?? ''),
+      isResetVerified: json['is_reset_verified'] as bool?,
+      profilePic: json['profilePic'] as String?,
+      profilePublicId: json['profilePublicId'] as String?,
+      createdAt: json['createdAt'] != null
+          ? DateTime.tryParse(json['createdAt'])
+          : null,
+      updatedAt: json['updatedAt'] != null
+          ? DateTime.tryParse(json['updatedAt'])
+          : null,
+      v: json['__v'] as int?,
     );
   }
 
@@ -66,8 +74,8 @@ class UserProfile {
     'is_reset_verified': isResetVerified,
     'profilePic': profilePic,
     'profilePublicId': profilePublicId,
-    'createdAt': createdAt.toIso8601String(),
-    'updatedAt': updatedAt.toIso8601String(),
+    'createdAt': createdAt?.toIso8601String(),
+    'updatedAt': updatedAt?.toIso8601String(),
     '__v': v,
   };
 }
