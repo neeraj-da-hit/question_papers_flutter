@@ -299,7 +299,7 @@ class NetworkManager extends GetxService {
       }
 
       // 🧩 Throw a meaningful exception
-      throw Exception(message);
+      throw ApiException(message);
     }
   }
 
@@ -316,8 +316,11 @@ class NetworkManager extends GetxService {
       throw Exception("No Internet connection");
     } else if (e is HttpException) {
       throw Exception(e.message);
+    } else if (e is Exception) {
+      // ✅ Re-throw the existing exception (e.g. from _handleResponse)
+      throw e;
     } else {
-      throw Exception("Unexpected error: $e");
+      throw Exception("Unexpected error");
     }
   }
 
@@ -355,4 +358,11 @@ class NetworkManager extends GetxService {
 
     print("────────────────────────────────────────────");
   }
+}
+
+class ApiException implements Exception {
+  final String message;
+  ApiException(this.message);
+  @override
+  String toString() => message; // no "Exception:" prefix
 }
