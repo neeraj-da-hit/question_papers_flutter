@@ -8,6 +8,7 @@ import 'package:question_papers_flutter/presentations/main/profile/controller/pr
 import 'package:question_papers_flutter/presentations/main/profile/widgets/logout_dialog_box.dart';
 import 'package:question_papers_flutter/presentations/main/profile/widgets/profile_info_tile.dart';
 import 'package:question_papers_flutter/presentations/main/profile/widgets/section_header.dart';
+import 'package:question_papers_flutter/presentations/main/update%20profile/screen/profile_update_screen.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -58,8 +59,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
           // ✏️ Edit Button
           TextButton(
             onPressed: () {
-              // TODO: Navigate to edit profile screen when implemented
-              Get.snackbar("Edit", "Edit profile feature coming soon!");
+              final profileData = profileController.data.value?.user;
+              if (profileData != null) {
+                // Directly pass the existing user object
+                Get.to(() => ProfileUpdateScreen(profile: profileData));
+              } else {
+                Get.snackbar("Error", "No profile data to edit.");
+              }
             },
             child: Text(
               "Edit",
@@ -107,10 +113,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       backgroundColor: isDark
                           ? Colors.grey[800]
                           : Colors.grey[300],
-                      backgroundImage: profile.profilePic.isNotEmpty
-                          ? NetworkImage(profile.profilePic)
-                          : const AssetImage('assets/images/hinata.jpeg')
-                                as ImageProvider,
+                      backgroundImage:
+                          (profile.profilePic != null &&
+                              profile.profilePic!.isNotEmpty)
+                          ? NetworkImage(profile.profilePic!) as ImageProvider
+                          : const AssetImage('assets/images/hinata.jpeg'),
                     ),
 
                     const SizedBox(height: 12),

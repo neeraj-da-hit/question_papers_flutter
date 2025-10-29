@@ -118,6 +118,43 @@ class NetworkManager extends GetxService {
     }
   }
 
+  Future<dynamic> putMultipartRequest({
+    required String endpoint,
+    Map<String, String>? fields,
+    File? imageFile,
+    String imageFieldName = 'profilePic',
+    Map<String, String>? headers,
+  }) async {
+    final uri = Uri.parse('$baseUrl/$endpoint');
+
+    // Remove 'Content-Type' so http can set it automatically
+    final effectiveHeaders = Map<String, String>.from(
+      headers ?? _defaultHeaders,
+    )..remove('Content-Type');
+
+    final request = http.MultipartRequest('PUT', uri);
+    request.headers.addAll(effectiveHeaders);
+
+    if (fields != null) request.fields.addAll(fields);
+
+    if (imageFile != null) {
+      request.files.add(
+        await http.MultipartFile.fromPath(imageFieldName, imageFile.path),
+      );
+    }
+
+    if (kDebugMode) {
+      print("🚀 [PUT Multipart] → ${uri.toString()}");
+      print("Fields: $fields");
+      if (imageFile != null) print("File: ${imageFile.path}");
+    }
+
+    final streamedResponse = await request.send();
+    final response = await http.Response.fromStream(streamedResponse);
+
+    return _handleResponse(response, uri);
+  }
+
   // ===========================================================
   // ❌ DELETE REQUEST
   // ===========================================================
