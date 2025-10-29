@@ -1,4 +1,6 @@
 import 'package:get/get.dart';
+import 'package:question_papers_flutter/core/permission/controller/permission_controller.dart';
+import 'package:question_papers_flutter/core/permission/service/permission_service.dart';
 import 'package:question_papers_flutter/presentations/auth/forgot_password/controller/forgot_password_controller.dart';
 import 'package:question_papers_flutter/presentations/auth/forgot_password/service/forgot_password_service.dart';
 import 'package:question_papers_flutter/presentations/auth/login/controller/login_controller.dart';
@@ -36,6 +38,7 @@ Future<void> initDependencies() async {
   Get.put<ForgotPasswordService>(ForgotPasswordService(), permanent: true);
   Get.put<NewPasswordService>(NewPasswordService(), permanent: true);
   Get.put<ProfileService>(ProfileService(), permanent: true);
+  Get.put<PermissionService>(PermissionService(), permanent: true);
 
   // Controllers
   Get.put<CourseController>(CourseController(), permanent: true);
@@ -53,6 +56,7 @@ Future<void> initDependencies() async {
   Get.put<ProfileController>(ProfileController(), permanent: true);
   Get.put<NewPasswordController>(NewPasswordController(), permanent: true);
   Get.put<ProfileController>(ProfileController(), permanent: true);
+  Get.put<PermissionController>(PermissionController(), permanent: true);
   // Get.put<ForgotPasswordOtpController>(
   //   ForgotPasswordOtpController(),
   //   permanent: true,

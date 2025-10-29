@@ -27,7 +27,7 @@ class SplashController extends GetxController {
       if (kDebugMode) print("📦 Current App Version: $currentVersion");
 
       final result = await _service.checkAppVersion(
-        "a4bf058f-f97b-4fc6-a6c2-9b3858a27f42",
+        "69022e990bf9df4bcb578c5f",
         currentVersion,
       );
 
