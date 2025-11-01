@@ -11,6 +11,10 @@ class AppTheme {
   static const Color textColorDark = Color(0xFFFFFFFF);
   static const Color greyText = Color(0xFF8E8E93);
 
+  // 🟦 Card Colors (added for consistency)
+  static const Color cardLight = Colors.white;
+  static const Color cardDark = Color(0xFF2C2C2E);
+
   // 🧱 Common Padding / Radius
   static const double defaultPadding = 16.0;
   static const double defaultRadius = 12.0;
@@ -24,6 +28,7 @@ class AppTheme {
       surface: backgroundLight,
     ),
     scaffoldBackgroundColor: backgroundLight,
+    cardColor: cardLight,
     appBarTheme: const AppBarTheme(
       backgroundColor: Colors.white,
       foregroundColor: Colors.black,
@@ -76,6 +81,7 @@ class AppTheme {
       surface: backgroundDark,
     ),
     scaffoldBackgroundColor: backgroundDark,
+    cardColor: cardDark,
     appBarTheme: const AppBarTheme(
       backgroundColor: backgroundDark,
       foregroundColor: Colors.white,

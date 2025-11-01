@@ -22,7 +22,6 @@ class _CourseScreenState extends State<CourseScreen> {
   @override
   void initState() {
     super.initState();
-    // Load data when screen opens
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _loadWithAnimation();
     });
@@ -35,7 +34,7 @@ class _CourseScreenState extends State<CourseScreen> {
 
     await controller.loadCourses();
 
-    // ensure shimmer stays visible at least 1 second
+    // ensure shimmer stays visible for at least 1 second
     final diff = DateTime.now().difference(start);
     final delay = diff.inMilliseconds < 1000 ? 1000 - diff.inMilliseconds : 0;
     await Future.delayed(Duration(milliseconds: delay));
@@ -64,7 +63,7 @@ class _CourseScreenState extends State<CourseScreen> {
         elevation: 0,
       ),
       body: Obx(() {
-        final courses = controller.courses;
+        final grouped = controller.groupedCourses;
 
         return RefreshIndicator(
           onRefresh: _loadWithAnimation,
@@ -77,41 +76,67 @@ class _CourseScreenState extends State<CourseScreen> {
                 ? ListView.separated(
                     key: const ValueKey('shimmer'),
                     physics: const AlwaysScrollableScrollPhysics(),
-                    padding: const EdgeInsets.only(top: 16, bottom: 32),
+                    padding: const EdgeInsets.all(AppTheme.defaultPadding),
                     itemCount: 10,
                     separatorBuilder: (_, __) => const SizedBox(height: 10),
                     itemBuilder: (_, __) => const ShimmerList(),
                   )
-                : Padding(
-                    key: const ValueKey('list'),
-                    padding: const EdgeInsets.symmetric(vertical: 12.0),
-                    child: courses.isEmpty
-                        ? ListView(
-                            physics: const AlwaysScrollableScrollPhysics(),
-                            children: [
-                              const SizedBox(height: 200),
-                              Center(
-                                child: Text(
-                                  "No courses available",
-                                  style: TextStyle(
-                                    fontSize: 16,
+                : grouped.isEmpty
+                ? ListView(
+                    physics: const AlwaysScrollableScrollPhysics(),
+                    children: [
+                      const SizedBox(height: 200),
+                      Center(
+                        child: Text(
+                          "No courses available",
+                          style: TextStyle(
+                            fontSize: 16,
+                            color: isDark
+                                ? AppTheme.greyText
+                                : AppTheme.textColorLight,
+                          ),
+                        ),
+                      ),
+                    ],
+                  )
+                : ListView.builder(
+                    physics: const AlwaysScrollableScrollPhysics(),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: AppTheme.defaultPadding,
+                      vertical: AppTheme.defaultPadding,
+                    ),
+                    itemCount: grouped.length,
+                    itemBuilder: (context, index) {
+                      final entry = grouped.entries.elementAt(index);
+                      final title = entry.key;
+                      final list = entry.value;
+
+                      if (list.isEmpty) return const SizedBox.shrink();
+
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          // Header
+                          Padding(
+                            padding: const EdgeInsets.only(top: 8, bottom: 12),
+                            child: Text(
+                              title,
+                              style: Theme.of(context).textTheme.titleMedium
+                                  ?.copyWith(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 18,
                                     color: isDark
-                                        ? AppTheme.greyText
+                                        ? AppTheme.textColorDark
                                         : AppTheme.textColorLight,
                                   ),
-                                ),
-                              ),
-                            ],
-                          )
-                        : ListView.separated(
-                            physics: const AlwaysScrollableScrollPhysics(),
-                            padding: const EdgeInsets.only(bottom: 32),
-                            itemCount: courses.length,
-                            separatorBuilder: (_, __) =>
-                                const SizedBox(height: 10),
-                            itemBuilder: (context, index) {
-                              final course = courses[index];
-                              return CourseTile(
+                            ),
+                          ),
+
+                          // List items
+                          ...list.map(
+                            (course) => Padding(
+                              padding: const EdgeInsets.only(bottom: 12.0),
+                              child: CourseTile(
                                 course: course,
                                 onTap: () {
                                   NavigationHelper.push(
@@ -121,9 +146,14 @@ class _CourseScreenState extends State<CourseScreen> {
                                     ),
                                   );
                                 },
-                              );
-                            },
+                              ),
+                            ),
                           ),
+
+                          const SizedBox(height: 16),
+                        ],
+                      );
+                    },
                   ),
           ),
         );
