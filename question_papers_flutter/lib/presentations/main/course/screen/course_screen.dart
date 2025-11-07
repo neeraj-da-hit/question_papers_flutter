@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:question_papers_flutter/common/app_theme.dart';
 import 'package:question_papers_flutter/common/shimmer_list.dart';
 import 'package:question_papers_flutter/helpers/navigation_helper.dart';
+import 'package:question_papers_flutter/presentations/main/add_question_paper/screen/add_question_paper_screen.dart';
 import 'package:question_papers_flutter/presentations/main/course/controller/course_controller.dart';
 import 'package:question_papers_flutter/presentations/main/course/widgets/course_tile.dart';
 import 'package:question_papers_flutter/presentations/main/year/screen/year_screen.dart';
@@ -61,6 +62,14 @@ class _CourseScreenState extends State<CourseScreen> {
         ),
         centerTitle: true,
         elevation: 0,
+        actions: [
+          IconButton(
+            onPressed: () {
+              Get.to(AddQuestionPaperScreen());
+            },
+            icon: Icon(Icons.add),
+          ),
+        ],
       ),
       body: Obx(() {
         final grouped = controller.groupedCourses;
@@ -149,7 +158,6 @@ class _CourseScreenState extends State<CourseScreen> {
                               ),
                             ),
                           ),
-
                           const SizedBox(height: 16),
                         ],
                       );
