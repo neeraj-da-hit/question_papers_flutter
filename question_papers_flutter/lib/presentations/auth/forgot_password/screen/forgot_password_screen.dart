@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:question_papers_flutter/common/app_theme.dart';
 import 'package:question_papers_flutter/common/widgets/app_textfield.dart';
 import 'package:question_papers_flutter/common/widgets/app_button.dart';
+import 'package:question_papers_flutter/helpers/navigation_helper.dart';
 import 'package:question_papers_flutter/presentations/auth/forgot_password/controller/forgot_password_controller.dart';
 
 class ForgotPasswordScreen extends StatelessWidget {
@@ -80,7 +81,8 @@ class ForgotPasswordScreen extends StatelessWidget {
             Center(
               child: TextButton(
                 onPressed: () {
-                  Get.back();
+                  NavigationHelper.pop();
+                  // Get.back();
                 },
                 child: const Text(
                   "Back to Login",

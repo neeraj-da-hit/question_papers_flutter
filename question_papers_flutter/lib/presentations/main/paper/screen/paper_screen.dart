@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:question_papers_flutter/common/app_theme.dart';
 import 'package:question_papers_flutter/common/shimmer_list.dart';
+import 'package:question_papers_flutter/helpers/navigation_helper.dart';
 import 'package:question_papers_flutter/presentations/main/paper/controller/paper_controller.dart';
 import 'package:question_papers_flutter/presentations/main/paper/widgets/paper_tile.dart';
 
@@ -74,7 +75,7 @@ class _PaperScreenState extends State<PaperScreen> {
             Icons.arrow_back,
             color: isDark ? AppTheme.textColorDark : AppTheme.textColorLight,
           ),
-          onPressed: () => Get.back(),
+          onPressed: () => NavigationHelper.pop(),
         ),
         elevation: 0,
       ),

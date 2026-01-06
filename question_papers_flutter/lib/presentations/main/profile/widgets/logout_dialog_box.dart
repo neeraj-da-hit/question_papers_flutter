@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:question_papers_flutter/common/app_theme.dart';
+import 'package:question_papers_flutter/helpers/navigation_helper.dart';
 import 'package:question_papers_flutter/presentations/main/profile/controller/profile_controller.dart';
 
 class LogoutDialogBox extends StatefulWidget {
@@ -105,7 +106,7 @@ class _LogoutDialogBoxState extends State<LogoutDialogBox>
                       ),
                       padding: const EdgeInsets.symmetric(vertical: 14),
                     ),
-                    onPressed: () => Get.back(),
+                    onPressed: () => NavigationHelper.pop(),
                     child: Text(
                       'Cancel',
                       style: TextStyle(

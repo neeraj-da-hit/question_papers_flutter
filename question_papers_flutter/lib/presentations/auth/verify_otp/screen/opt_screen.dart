@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:question_papers_flutter/common/app_theme.dart';
 import 'package:question_papers_flutter/common/widgets/app_button.dart';
+import 'package:question_papers_flutter/helpers/navigation_helper.dart';
 import 'package:question_papers_flutter/presentations/auth/verify_otp/controller/verify_otp_controller.dart';
 
 class VerifyOtpScreen extends StatefulWidget {
@@ -79,7 +80,7 @@ class _VerifyOtpScreenState extends State<VerifyOtpScreen> {
               Row(
                 children: [
                   IconButton(
-                    onPressed: () => Get.back(),
+                    onPressed: () => NavigationHelper.pop(), //Get.back(),
                     icon: const Icon(Icons.arrow_back_ios_new_rounded),
                     color: isDark
                         ? AppTheme.textColorDark

@@ -23,8 +23,6 @@ class PermissionController extends GetxController {
   Future<void> requestAll() async {
     final results = await PermissionService.requestMultiple([
       Permission.camera,
-      Permission.locationWhenInUse,
-      Permission.storage,
     ]);
 
     results.forEach((perm, status) {
@@ -35,10 +33,6 @@ class PermissionController extends GetxController {
   void _updatePermission(Permission permission, bool granted) {
     if (permission == Permission.camera) {
       cameraGranted.value = granted;
-    } else if (permission == Permission.locationWhenInUse) {
-      locationGranted.value = granted;
-    } else if (permission == Permission.storage) {
-      storageGranted.value = granted;
     }
   }
 }

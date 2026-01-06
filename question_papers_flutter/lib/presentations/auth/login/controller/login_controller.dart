@@ -55,7 +55,8 @@ class LoginController extends GetxController {
     } catch (e) {
       // ✅ Extract only the message part
       final errorMessage = e.toString().replaceFirst('', '');
-      Get.snackbar("Login Failed", errorMessage);
+      Get.snackbar('Error', errorMessage);
+
       return false;
     } finally {}
   }

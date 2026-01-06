@@ -72,7 +72,7 @@ class _YearScreenState extends State<YearScreen> {
             Icons.arrow_back,
             color: isDark ? AppTheme.textColorDark : AppTheme.textColorLight,
           ),
-          onPressed: () => Get.back(),
+          onPressed: () => NavigationHelper.pop(),
         ),
         elevation: 0,
       ),

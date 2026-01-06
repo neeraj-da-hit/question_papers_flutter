@@ -5,6 +5,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:question_papers_flutter/common/app_theme.dart';
 import 'package:question_papers_flutter/common/widgets/app_button.dart';
 import 'package:question_papers_flutter/common/widgets/app_textfield.dart';
+import 'package:question_papers_flutter/helpers/navigation_helper.dart';
 import 'package:question_papers_flutter/presentations/auth/signup/controller/sign_controller.dart';
 
 class SignupScreen extends StatelessWidget {
@@ -46,18 +47,18 @@ class SignupScreen extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // 🔙 Back Button
-              // Row(
-              //   mainAxisAlignment: MainAxisAlignment.end,
-              //   children: [
-              //     IconButton(
-              //       onPressed: () => Get.back(),
-              //       icon: const Icon(Icons.close),
-              //       color: isDark
-              //           ? AppTheme.textColorDark
-              //           : AppTheme.textColorLight,
-              //     ),
-              //   ],
-              // ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  IconButton(
+                    onPressed: () => {NavigationHelper.pop()},
+                    icon: const Icon(Icons.close),
+                    color: isDark
+                        ? AppTheme.textColorDark
+                        : AppTheme.textColorLight,
+                  ),
+                ],
+              ),
               const SizedBox(height: 10),
 
               // 🧭 Header Section
@@ -108,7 +109,9 @@ class SignupScreen extends StatelessWidget {
                   children: [
                     Obx(
                       () => GestureDetector(
-                        onTap: pickImage,
+                        onTap: () async {
+                          pickImage();
+                        },
                         child: Container(
                           height: 120,
                           width: 120,

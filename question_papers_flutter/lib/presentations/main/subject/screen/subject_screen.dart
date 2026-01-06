@@ -71,7 +71,7 @@ class _SubjectScreenState extends State<SubjectScreen> {
             Icons.arrow_back,
             color: isDark ? AppTheme.textColorDark : AppTheme.textColorLight,
           ),
-          onPressed: () => Get.back(),
+          onPressed: () => NavigationHelper.pop(),
         ),
         elevation: 0,
       ),

@@ -16,26 +16,18 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      // 🪄 Dismiss keyboard on tap anywhere
-      onTap: () {
-        FocusManager.instance.primaryFocus?.unfocus();
-      },
-      behavior: HitTestBehavior
-          .translucent, // ensures taps go through empty space too
+    return // ensures taps go through empty space too
+    GetMaterialApp(
+      title: 'Flutter Demo',
+      debugShowCheckedModeBanner: false,
 
-      child: GetMaterialApp(
-        title: 'Flutter Demo',
-        debugShowCheckedModeBanner: false,
+      /// ✅ attach your global navigation key here
+      navigatorKey: navigatorKey,
 
-        /// ✅ attach your global navigation key here
-        navigatorKey: navigatorKey,
-
-        theme: AppTheme.lightTheme,
-        darkTheme: AppTheme.darkTheme,
-        themeMode: ThemeMode.system,
-        home: SplashScreen(),
-      ),
+      theme: AppTheme.lightTheme,
+      darkTheme: AppTheme.darkTheme,
+      themeMode: ThemeMode.system,
+      home: SplashScreen(),
     );
   }
 }
